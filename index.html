@@ -1,0 +1,3718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AQA Organic Mechanisms — Complete Guide</title>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { background: #0b0f18; color: #e2e8f0; font-family: Georgia, 'Times New Roman', serif; }
+    #root { min-height: 100vh; }
+    ::-webkit-scrollbar { height: 4px; width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+    button { outline: none; }
+    svg { overflow: visible; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // Provide React globals
+    const { useState, createElement } = React;
+// ─── Topics ────────────────────────────────────────────────────────────────
+const topics = [{
+  id: "frs",
+  label: "Free Radical Sub.",
+  emoji: "⚡",
+  color: "#facc15",
+  dark: "#1a1000"
+}, {
+  id: "ea",
+  label: "Electrophilic Addition",
+  emoji: "⚗",
+  color: "#4ade80",
+  dark: "#022c16"
+}, {
+  id: "sn2",
+  label: "SN2 Mechanism",
+  emoji: "🔄",
+  color: "#60a5fa",
+  dark: "#071526"
+}, {
+  id: "sn1",
+  label: "SN1 Mechanism",
+  emoji: "💥",
+  color: "#a78bfa",
+  dark: "#13082a"
+}, {
+  id: "elim",
+  label: "Elimination",
+  emoji: "↗",
+  color: "#fb923c",
+  dark: "#1c0800"
+}, {
+  id: "carb",
+  label: "Carbonyl – Nucl. Add.",
+  emoji: "🧪",
+  color: "#c084fc",
+  dark: "#150a2a"
+}, {
+  id: "benz",
+  label: "Benzene EAS",
+  emoji: "⬡",
+  color: "#f87171",
+  dark: "#1c0303"
+}, {
+  id: "acyl",
+  label: "Acyl Chlorides",
+  emoji: "🔬",
+  color: "#67e8f9",
+  dark: "#031418"
+}, {
+  id: "ester",
+  label: "Esters & Hydrolysis",
+  emoji: "🔗",
+  color: "#a78bfa",
+  dark: "#10082a"
+}, {
+  id: "amines",
+  label: "Amines",
+  emoji: "💠",
+  color: "#34d399",
+  dark: "#022018"
+}];
+function hexRgb(h) {
+  const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);
+  return r ? `${parseInt(r[1], 16)},${parseInt(r[2], 16)},${parseInt(r[3], 16)}` : "255,255,255";
+}
+
+// ─── SVG Primitives ────────────────────────────────────────────────────────
+const DEFS = () => /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("marker", {
+  id: "oa",
+  markerWidth: "8",
+  markerHeight: "6",
+  refX: "7",
+  refY: "3",
+  orient: "auto"
+}, /*#__PURE__*/React.createElement("polygon", {
+  points: "0 0, 8 3, 0 6",
+  fill: "#fb923c"
+})), /*#__PURE__*/React.createElement("marker", {
+  id: "ya",
+  markerWidth: "6",
+  markerHeight: "5",
+  refX: "5",
+  refY: "2.5",
+  orient: "auto"
+}, /*#__PURE__*/React.createElement("polygon", {
+  points: "0 0, 6 2.5, 0 5",
+  fill: "#facc15"
+})), /*#__PURE__*/React.createElement("marker", {
+  id: "ga",
+  markerWidth: "8",
+  markerHeight: "6",
+  refX: "7",
+  refY: "3",
+  orient: "auto"
+}, /*#__PURE__*/React.createElement("polygon", {
+  points: "0 0, 8 3, 0 6",
+  fill: "#4ade80"
+})), /*#__PURE__*/React.createElement("marker", {
+  id: "wa",
+  markerWidth: "10",
+  markerHeight: "7",
+  refX: "9",
+  refY: "3.5",
+  orient: "auto"
+}, /*#__PURE__*/React.createElement("polygon", {
+  points: "0 0, 10 3.5, 0 7",
+  fill: "#64748b"
+})), /*#__PURE__*/React.createElement("marker", {
+  id: "ba",
+  markerWidth: "8",
+  markerHeight: "6",
+  refX: "7",
+  refY: "3",
+  orient: "auto"
+}, /*#__PURE__*/React.createElement("polygon", {
+  points: "0 0, 8 3, 0 6",
+  fill: "#60a5fa"
+})));
+
+// Electron-movement arrows
+const OA = ({
+  d
+}) => /*#__PURE__*/React.createElement("path", {
+  d: d,
+  stroke: "#fb923c",
+  fill: "none",
+  strokeWidth: "2.2",
+  markerEnd: "url(#oa)"
+});
+const YA = ({
+  d
+}) => /*#__PURE__*/React.createElement("path", {
+  d: d,
+  stroke: "#facc15",
+  fill: "none",
+  strokeWidth: "2",
+  markerEnd: "url(#ya)"
+});
+const GA = ({
+  d
+}) => /*#__PURE__*/React.createElement("path", {
+  d: d,
+  stroke: "#4ade80",
+  fill: "none",
+  strokeWidth: "2.2",
+  markerEnd: "url(#ga)"
+});
+const BA = ({
+  d
+}) => /*#__PURE__*/React.createElement("path", {
+  d: d,
+  stroke: "#60a5fa",
+  fill: "none",
+  strokeWidth: "2.2",
+  markerEnd: "url(#ba)"
+});
+
+// Straight reaction arrow
+const RA = ({
+  x1,
+  y1,
+  x2,
+  y2,
+  above = "",
+  below = ""
+}) => /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("line", {
+  x1: x1,
+  y1: y1,
+  x2: x2 - 10,
+  y2: y2,
+  stroke: "#64748b",
+  strokeWidth: "1.5"
+}), /*#__PURE__*/React.createElement("polygon", {
+  points: `${x2},${y2} ${x2 - 10},${y2 - 4} ${x2 - 10},${y2 + 4}`,
+  fill: "#64748b"
+}), above && /*#__PURE__*/React.createElement("text", {
+  x: (x1 + x2) / 2,
+  y: y1 - 8,
+  fill: "#94a3b8",
+  fontSize: "9",
+  fontFamily: "Georgia,serif",
+  textAnchor: "middle",
+  fontStyle: "italic"
+}, above), below && /*#__PURE__*/React.createElement("text", {
+  x: (x1 + x2) / 2,
+  y: y2 + 20,
+  fill: "#94a3b8",
+  fontSize: "9",
+  fontFamily: "Georgia,serif",
+  textAnchor: "middle",
+  fontStyle: "italic"
+}, below));
+
+// Equilibrium arrows (double-headed)
+const EA = ({
+  x1,
+  y,
+  x2
+}) => /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("line", {
+  x1: x1,
+  y1: y - 3,
+  x2: x2 - 8,
+  y2: y - 3,
+  stroke: "#64748b",
+  strokeWidth: "1.4"
+}), /*#__PURE__*/React.createElement("polygon", {
+  points: `${x2},${y - 3} ${x2 - 8},${y - 6} ${x2 - 8},${y}`,
+  fill: "#64748b"
+}), /*#__PURE__*/React.createElement("line", {
+  x1: x2,
+  y1: y + 3,
+  x2: x1 + 8,
+  y2: y + 3,
+  stroke: "#64748b",
+  strokeWidth: "1.4"
+}), /*#__PURE__*/React.createElement("polygon", {
+  points: `${x1},${y + 3} ${x1 + 8},${y} ${x1 + 8},${y + 6}`,
+  fill: "#64748b"
+}));
+
+// Atom label
+const T = ({
+  x,
+  y,
+  t,
+  c = "#e2e8f0",
+  s = 14,
+  b = true
+}) => /*#__PURE__*/React.createElement("text", {
+  x: x,
+  y: y,
+  fill: c,
+  fontSize: s,
+  fontFamily: "'Courier New',monospace",
+  fontWeight: b ? "700" : "400",
+  textAnchor: "middle",
+  dominantBaseline: "middle"
+}, t);
+
+// Bond
+const BD = ({
+  x1,
+  y1,
+  x2,
+  y2,
+  dash = false,
+  n = 1
+}) => {
+  const dx = x2 - x1,
+    dy = y2 - y1,
+    len = Math.sqrt(dx * dx + dy * dy) || 1;
+  const px = -dy / len * 2.8,
+    py = dx / len * 2.8;
+  return /*#__PURE__*/React.createElement("g", {
+    opacity: dash ? 0.5 : 0.85
+  }, /*#__PURE__*/React.createElement("line", {
+    x1: x1,
+    y1: y1,
+    x2: x2,
+    y2: y2,
+    stroke: "#94a3b8",
+    strokeWidth: "1.8",
+    strokeDasharray: dash ? "5,3" : "none"
+  }), n >= 2 && /*#__PURE__*/React.createElement("line", {
+    x1: x1 + px,
+    y1: y1 + py,
+    x2: x2 + px,
+    y2: y2 + py,
+    stroke: "#94a3b8",
+    strokeWidth: "1.8"
+  }), n >= 3 && /*#__PURE__*/React.createElement("line", {
+    x1: x1 - px,
+    y1: y1 - py,
+    x2: x2 - px,
+    y2: y2 - py,
+    stroke: "#94a3b8",
+    strokeWidth: "1.8"
+  }));
+};
+
+// Lone pair (two blue dots at angle from atom centre)
+const LP = ({
+  x,
+  y,
+  angle = 90
+}) => {
+  const r = 8,
+    a1 = (angle - 20) * Math.PI / 180,
+    a2 = (angle + 20) * Math.PI / 180;
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("circle", {
+    cx: x + r * Math.cos(a1),
+    cy: y - r * Math.sin(a1),
+    r: "2.3",
+    fill: "#60a5fa"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: x + r * Math.cos(a2),
+    cy: y - r * Math.sin(a2),
+    r: "2.3",
+    fill: "#60a5fa"
+  }));
+};
+
+// Radical dot
+const RD = ({
+  x,
+  y
+}) => /*#__PURE__*/React.createElement("circle", {
+  cx: x,
+  cy: y,
+  r: "3",
+  fill: "#facc15"
+});
+
+// Charges / labels
+const Ch = ({
+  x,
+  y,
+  t,
+  c = "#fca5a5"
+}) => /*#__PURE__*/React.createElement("text", {
+  x: x,
+  y: y,
+  fill: c,
+  fontSize: "12",
+  fontFamily: "monospace"
+}, t);
+const Dl = ({
+  x,
+  y,
+  t
+}) => /*#__PURE__*/React.createElement("text", {
+  x: x,
+  y: y,
+  fill: "#fde68a",
+  fontSize: "10",
+  fontFamily: "monospace"
+}, "\u03B4", t);
+const Lbl = ({
+  x,
+  y,
+  t,
+  c = "#64748b"
+}) => /*#__PURE__*/React.createElement("text", {
+  x: x,
+  y: y,
+  fill: c,
+  fontSize: "10",
+  fontFamily: "Georgia,serif",
+  fontStyle: "italic",
+  textAnchor: "middle"
+}, t);
+const HdrLbl = ({
+  x,
+  y,
+  t,
+  c
+}) => /*#__PURE__*/React.createElement("text", {
+  x: x,
+  y: y,
+  fill: c,
+  fontSize: "11",
+  fontFamily: "Georgia,serif",
+  fontWeight: "600",
+  textAnchor: "middle"
+}, t);
+
+// SVG wrapper
+const MS = ({
+  w = 540,
+  h = 155,
+  children
+}) => /*#__PURE__*/React.createElement("svg", {
+  viewBox: `0 0 ${w} ${h}`,
+  width: "100%",
+  style: {
+    maxWidth: w,
+    display: "block",
+    margin: "10px auto",
+    overflow: "visible"
+  }
+}, /*#__PURE__*/React.createElement(DEFS, null), children);
+
+// Transition-state / intermediate brackets
+const BRK = ({
+  x,
+  y,
+  w,
+  h
+}) => /*#__PURE__*/React.createElement("g", {
+  stroke: "#64748b",
+  strokeWidth: "1.5",
+  fill: "none",
+  opacity: "0.65"
+}, /*#__PURE__*/React.createElement("path", {
+  d: `M${x + 5},${y} L${x},${y} L${x},${y + h} L${x + 5},${y + h}`
+}), /*#__PURE__*/React.createElement("path", {
+  d: `M${x + w - 5},${y} L${x + w},${y} L${x + w},${y + h} L${x + w - 5},${y + h}`
+}));
+
+// Benzene ring (hexagon at cx,cy with radius r)
+const Benzene = ({
+  cx,
+  cy,
+  r = 28,
+  c = "#94a3b8"
+}) => {
+  const pts = Array.from({
+    length: 6
+  }, (_, i) => {
+    const a = (i * 60 - 30) * Math.PI / 180;
+    return `${cx + r * Math.cos(a)},${cy + r * Math.sin(a)}`;
+  }).join(" ");
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("polygon", {
+    points: pts,
+    fill: "none",
+    stroke: c,
+    strokeWidth: "1.8"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: cx,
+    cy: cy,
+    r: r * 0.55,
+    fill: "none",
+    stroke: c,
+    strokeWidth: "1.8"
+  }));
+};
+
+// ─── UI Components ─────────────────────────────────────────────────────────
+const InfoBox = ({
+  bg,
+  border,
+  children
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    background: bg,
+    border: `1px solid ${border}`,
+    borderRadius: 8,
+    padding: "10px 14px",
+    marginBottom: 14,
+    fontSize: "0.85em",
+    lineHeight: 1.6
+  }
+}, children);
+const ReagBox = ({
+  reagents,
+  conditions,
+  color
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    gap: 8,
+    flexWrap: "wrap",
+    marginBottom: 10
+  }
+}, reagents && /*#__PURE__*/React.createElement("span", {
+  style: {
+    background: "rgba(255,255,255,0.05)",
+    padding: "3px 10px",
+    borderRadius: 6,
+    fontSize: "0.79em",
+    color: "#cbd5e1"
+  }
+}, /*#__PURE__*/React.createElement("b", {
+  style: {
+    color: "#94a3b8"
+  }
+}, "Reagents: "), reagents), conditions && /*#__PURE__*/React.createElement("span", {
+  style: {
+    background: "rgba(255,255,255,0.05)",
+    padding: "3px 10px",
+    borderRadius: 6,
+    fontSize: "0.79em",
+    color: "#cbd5e1"
+  }
+}, /*#__PURE__*/React.createElement("b", {
+  style: {
+    color: "#94a3b8"
+  }
+}, "Conditions: "), conditions));
+const Steps = ({
+  items,
+  color
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    marginTop: 10
+  }
+}, items.map((s, i) => /*#__PURE__*/React.createElement("div", {
+  key: i,
+  style: {
+    display: "flex",
+    gap: 10,
+    marginBottom: 7,
+    alignItems: "flex-start"
+  }
+}, /*#__PURE__*/React.createElement("span", {
+  style: {
+    background: `rgba(${hexRgb(color)},0.18)`,
+    color,
+    minWidth: 22,
+    height: 22,
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "0.75em",
+    fontWeight: 700,
+    flexShrink: 0
+  }
+}, i + 1), /*#__PURE__*/React.createElement("span", {
+  style: {
+    color: "#cbd5e1",
+    fontSize: "0.84em",
+    lineHeight: 1.6
+  }
+}, s))));
+const Note = ({
+  t
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    marginTop: 10,
+    padding: "8px 12px",
+    background: "rgba(255,255,255,0.03)",
+    borderRadius: 6,
+    color: "#94a3b8",
+    fontSize: "0.8em"
+  }
+}, "\uD83D\uDCA1 ", t);
+const OBs = ({
+  t
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    background: "rgba(253,230,138,0.06)",
+    border: "1px solid rgba(253,230,138,0.15)",
+    borderRadius: 6,
+    padding: "6px 12px",
+    marginBottom: 8,
+    color: "#fde68a",
+    fontSize: "0.8em"
+  }
+}, "\uD83D\uDC41 ", /*#__PURE__*/React.createElement("b", null, "Observation:"), " ", t);
+const MCard = ({
+  title,
+  type,
+  color,
+  reagents,
+  conditions,
+  diagram,
+  steps,
+  note,
+  obs,
+  extra
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(255,255,255,0.07)",
+    borderLeft: `3px solid ${color}`,
+    borderRadius: 8,
+    padding: "16px 18px",
+    marginBottom: 20
+  }
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 8,
+    flexWrap: "wrap"
+  }
+}, /*#__PURE__*/React.createElement("span", {
+  style: {
+    fontFamily: "Georgia,serif",
+    fontSize: "1.05em",
+    fontWeight: 700,
+    color: "#f1f5f9"
+  }
+}, title), type && /*#__PURE__*/React.createElement("span", {
+  style: {
+    background: `rgba(${hexRgb(color)},0.13)`,
+    color,
+    padding: "2px 10px",
+    borderRadius: 20,
+    fontSize: "0.72em",
+    fontWeight: 700
+  }
+}, type)), (reagents || conditions) && /*#__PURE__*/React.createElement(ReagBox, {
+  reagents: reagents,
+  conditions: conditions,
+  color: color
+}), obs && /*#__PURE__*/React.createElement(OBs, {
+  t: obs
+}), diagram, steps && /*#__PURE__*/React.createElement(Steps, {
+  items: steps,
+  color: color
+}), note && /*#__PURE__*/React.createElement(Note, {
+  t: note
+}), extra);
+const SectionHead = ({
+  t,
+  c
+}) => /*#__PURE__*/React.createElement("h3", {
+  style: {
+    color: c,
+    fontFamily: "Georgia,serif",
+    fontSize: "1.05em",
+    fontWeight: 700,
+    marginBottom: 12,
+    paddingBottom: 6,
+    borderBottom: "1px solid rgba(255,255,255,0.08)"
+  }
+}, t);
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  MECHANISM DIAGRAMS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── FRS ───────────────────────────────────────────────────────────────────
+const FRS_Init = () => /*#__PURE__*/React.createElement(MS, {
+  w: 440,
+  h: 130
+}, /*#__PURE__*/React.createElement(T, {
+  x: 80,
+  y: 65,
+  t: "Cl",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 95,
+  y1: 65,
+  x2: 128,
+  y2: 65
+}), /*#__PURE__*/React.createElement(T, {
+  x: 143,
+  y: 65,
+  t: "Cl",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(YA, {
+  d: "M 108,58 Q 92,38 74,55"
+}), /*#__PURE__*/React.createElement(YA, {
+  d: "M 117,58 Q 133,38 150,55"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 168,
+  y1: 65,
+  x2: 210,
+  y2: 65,
+  above: "UV light"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 238,
+  y: 65,
+  t: "Cl\u2022",
+  c: "#facc15"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 280,
+  y: 57,
+  t: "+",
+  c: "#64748b",
+  s: 16
+}), /*#__PURE__*/React.createElement(T, {
+  x: 320,
+  y: 65,
+  t: "\u2022Cl",
+  c: "#facc15"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 220,
+  y: 108,
+  t: "homolytic fission \u2014 each atom keeps one electron"
+}), /*#__PURE__*/React.createElement(HdrLbl, {
+  x: 110,
+  y: 108,
+  t: "Cl\u2082 only",
+  c: "#64748b"
+}));
+const FRS_Prop = () => /*#__PURE__*/React.createElement(MS, {
+  w: 520,
+  h: 145
+}, /*#__PURE__*/React.createElement(HdrLbl, {
+  x: 100,
+  y: 20,
+  t: "Propagation 1",
+  c: "#facc15"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 45,
+  y: 65,
+  t: "CH\u2084",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 88,
+  y: 57,
+  t: "+",
+  c: "#64748b",
+  s: 15
+}), /*#__PURE__*/React.createElement(RD, {
+  x: 118,
+  y: 65
+}), /*#__PURE__*/React.createElement(T, {
+  x: 130,
+  y: 65,
+  t: "Cl\u2022",
+  c: "#facc15"
+}), /*#__PURE__*/React.createElement(YA, {
+  d: "M 62,57 Q 95,32 118,58"
+}), /*#__PURE__*/React.createElement(YA, {
+  d: "M 140,58 Q 152,38 160,52"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 155,
+  y1: 65,
+  x2: 192,
+  y2: 65
+}), /*#__PURE__*/React.createElement(RD, {
+  x: 210,
+  y: 65
+}), /*#__PURE__*/React.createElement(T, {
+  x: 222,
+  y: 65,
+  t: "CH\u2083\u2022",
+  c: "#facc15"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 270,
+  y: 57,
+  t: "+",
+  c: "#64748b",
+  s: 15
+}), /*#__PURE__*/React.createElement(T, {
+  x: 300,
+  y: 65,
+  t: "HCl",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(HdrLbl, {
+  x: 100,
+  y: 118,
+  t: "Propagation 2",
+  c: "#facc15"
+}), /*#__PURE__*/React.createElement(RD, {
+  x: 30,
+  y: 130
+}), /*#__PURE__*/React.createElement(T, {
+  x: 55,
+  y: 130,
+  t: "CH\u2083\u2022",
+  c: "#facc15"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 100,
+  y: 122,
+  t: "+",
+  c: "#64748b",
+  s: 15
+}), /*#__PURE__*/React.createElement(T, {
+  x: 135,
+  y: 130,
+  t: "Cl",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 148,
+  y1: 130,
+  x2: 174,
+  y2: 130
+}), /*#__PURE__*/React.createElement(T, {
+  x: 185,
+  y: 130,
+  t: "Cl",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(YA, {
+  d: "M 72,123 Q 112,102 140,122"
+}), /*#__PURE__*/React.createElement(YA, {
+  d: "M 158,122 Q 168,108 180,118"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 200,
+  y1: 130,
+  x2: 235,
+  y2: 130
+}), /*#__PURE__*/React.createElement(T, {
+  x: 270,
+  y: 130,
+  t: "CH\u2083Cl",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 320,
+  y: 122,
+  t: "+",
+  c: "#64748b",
+  s: 15
+}), /*#__PURE__*/React.createElement(RD, {
+  x: 345,
+  y: 130
+}), /*#__PURE__*/React.createElement(T, {
+  x: 360,
+  y: 130,
+  t: "Cl\u2022",
+  c: "#facc15"
+}));
+const FRS_Term = () => /*#__PURE__*/React.createElement(MS, {
+  w: 480,
+  h: 105
+}, /*#__PURE__*/React.createElement(HdrLbl, {
+  x: 240,
+  y: 15,
+  t: "Any two radicals combine \u2014 no new chain carriers formed",
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 55,
+  y: 50,
+  t: "Cl\u2022 + \u2022Cl  \u2192  Cl\u2082",
+  c: "#94a3b8",
+  s: 12
+}), /*#__PURE__*/React.createElement(T, {
+  x: 55,
+  y: 72,
+  t: "CH\u2083\u2022 + \u2022Cl  \u2192  CH\u2083Cl",
+  c: "#94a3b8",
+  s: 12
+}), /*#__PURE__*/React.createElement(T, {
+  x: 55,
+  y: 94,
+  t: "CH\u2083\u2022 + \u2022CH\u2083  \u2192  C\u2082H\u2086",
+  c: "#94a3b8",
+  s: 12
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 380,
+  y: 50,
+  t: "Cl\u2082 reformed"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 380,
+  y: 72,
+  t: "useful product"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 380,
+  y: 94,
+  t: "unwanted side product"
+}));
+
+// ── Electrophilic Addition ────────────────────────────────────────────────
+const EA_Br2_Step1 = () => /*#__PURE__*/React.createElement(MS, {
+  w: 520,
+  h: 160
+}, /*#__PURE__*/React.createElement(T, {
+  x: 70,
+  y: 80,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 82,
+  y1: 80,
+  x2: 115,
+  y2: 80,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 127,
+  y: 80,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 58,
+  y: 62,
+  t: "H\u2082",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(T, {
+  x: 139,
+  y: 62,
+  t: "H\u2082",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(T, {
+  x: 190,
+  y: 80,
+  t: "Br",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 204,
+  y1: 80,
+  x2: 224,
+  y2: 80
+}), /*#__PURE__*/React.createElement(T, {
+  x: 238,
+  y: 80,
+  t: "Br",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 185,
+  y: 66,
+  t: "\u03B4+"
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 236,
+  y: 66,
+  t: "\u03B4\u2212"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 250,
+  y: 80,
+  angle: 0
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 238,
+  y: 66,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 98,70 Q 140,42 182,72"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 215,72 Q 227,52 245,70"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 265,
+  y1: 80,
+  x2: 300,
+  y2: 80
+}), /*#__PURE__*/React.createElement(BRK, {
+  x: 305,
+  y: 52,
+  w: 140,
+  h: 54
+}), /*#__PURE__*/React.createElement(T, {
+  x: 330,
+  y: 78,
+  t: "C",
+  c: "#e2e8f0",
+  s: 13
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 340,
+  y1: 74,
+  x2: 360,
+  y2: 65
+}), /*#__PURE__*/React.createElement(T, {
+  x: 368,
+  y: 62,
+  t: "Br",
+  c: "#c084fc",
+  s: 13
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 340,
+  y1: 84,
+  x2: 360,
+  y2: 93
+}), /*#__PURE__*/React.createElement(T, {
+  x: 368,
+  y: 96,
+  t: "C",
+  c: "#e2e8f0",
+  s: 13
+}), /*#__PURE__*/React.createElement(T, {
+  x: 350,
+  y: 80,
+  t: "\u207A",
+  c: "#fca5a5",
+  s: 12
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 443,
+  y: 68,
+  t: "\u207A",
+  c: "#fca5a5"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 375,
+  y: 120,
+  t: "bromonium ion intermediate"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 100,
+  y: 135,
+  t: "\u03C0 electrons attack \u03B4+ Br"
+}));
+const EA_Br2_Step2 = () => /*#__PURE__*/React.createElement(MS, {
+  w: 500,
+  h: 145
+}, /*#__PURE__*/React.createElement(BRK, {
+  x: 20,
+  y: 38,
+  w: 145,
+  h: 55
+}), /*#__PURE__*/React.createElement(T, {
+  x: 50,
+  y: 65,
+  t: "C",
+  c: "#e2e8f0",
+  s: 13
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 60,
+  y1: 60,
+  x2: 82,
+  y2: 52
+}), /*#__PURE__*/React.createElement(T, {
+  x: 90,
+  y: 48,
+  t: "Br",
+  c: "#c084fc",
+  s: 13
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 60,
+  y1: 70,
+  x2: 82,
+  y2: 80
+}), /*#__PURE__*/React.createElement(T, {
+  x: 90,
+  y: 84,
+  t: "C",
+  c: "#e2e8f0",
+  s: 13
+}), /*#__PURE__*/React.createElement(T, {
+  x: 72,
+  y: 65,
+  t: "\u207A",
+  c: "#fca5a5",
+  s: 11
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 163,
+  y: 50,
+  t: "\u207A"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 190,
+  y: 65,
+  t: "+",
+  c: "#64748b",
+  s: 15
+}), /*#__PURE__*/React.createElement(T, {
+  x: 218,
+  y: 65,
+  t: "Br\u207B",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 205,
+  y: 65,
+  angle: 180
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 215,
+  y: 52,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 207,57 Q 155,32 105,60"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 248,
+  y1: 65,
+  x2: 288,
+  y2: 65
+}), /*#__PURE__*/React.createElement(T, {
+  x: 315,
+  y: 55,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 327,
+  y1: 55,
+  x2: 360,
+  y2: 55
+}), /*#__PURE__*/React.createElement(T, {
+  x: 372,
+  y: 55,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 315,
+  y1: 65,
+  x2: 315,
+  y2: 80
+}), /*#__PURE__*/React.createElement(T, {
+  x: 315,
+  y: 90,
+  t: "Br",
+  c: "#c084fc",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 372,
+  y1: 65,
+  x2: 372,
+  y2: 80
+}), /*#__PURE__*/React.createElement(T, {
+  x: 372,
+  y: 90,
+  t: "Br",
+  c: "#c084fc",
+  s: 12
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 344,
+  y: 125,
+  t: "anti addition product (trans)"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 120,
+  y: 120,
+  t: "Br\u207B attacks from opposite face \u2192 anti addition"
+}));
+const EA_HBr = () => /*#__PURE__*/React.createElement(MS, {
+  w: 560,
+  h: 170
+}, /*#__PURE__*/React.createElement(T, {
+  x: 58,
+  y: 75,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 70,
+  y1: 75,
+  x2: 105,
+  y2: 75,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 117,
+  y: 75,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 45,
+  y: 57,
+  t: "H\u2082",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(T, {
+  x: 129,
+  y: 57,
+  t: "H",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 156,
+  y1: 75,
+  x2: 188,
+  y2: 75
+}), /*#__PURE__*/React.createElement(T, {
+  x: 198,
+  y: 75,
+  t: "H",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 198,
+  y1: 75,
+  x2: 225,
+  y2: 75
+}), /*#__PURE__*/React.createElement(T, {
+  x: 238,
+  y: 75,
+  t: "Br",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 194,
+  y: 60,
+  t: "\u03B4+"
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 234,
+  y: 60,
+  t: "\u03B4\u2212"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 90,64 Q 145,35 190,67"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 215,68 Q 228,50 243,65"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 258,
+  y1: 75,
+  x2: 295,
+  y2: 75
+}), /*#__PURE__*/React.createElement(BRK, {
+  x: 300,
+  y: 50,
+  w: 100,
+  h: 50
+}), /*#__PURE__*/React.createElement(T, {
+  x: 323,
+  y: 75,
+  t: "C",
+  c: "#e2e8f0",
+  s: 13
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 335,
+  y1: 75,
+  x2: 358,
+  y2: 75
+}), /*#__PURE__*/React.createElement(T, {
+  x: 370,
+  y: 75,
+  t: "C",
+  c: "#e2e8f0",
+  s: 13
+}), /*#__PURE__*/React.createElement(T, {
+  x: 370,
+  y: 55,
+  t: "H",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 370,
+  y1: 65,
+  x2: 370,
+  y2: 60
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 375,
+  y: 60,
+  t: "\u207A"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 350,
+  y: 120,
+  t: "carbocation (more stable = more substituted)"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 405,
+  y1: 75,
+  x2: 442,
+  y2: 75
+}), /*#__PURE__*/React.createElement(T, {
+  x: 460,
+  y: 65,
+  t: "CH\u2083",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(T, {
+  x: 480,
+  y: 75,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 492,
+  y1: 75,
+  x2: 510,
+  y2: 75
+}), /*#__PURE__*/React.createElement(T, {
+  x: 522,
+  y: 75,
+  t: "Br",
+  c: "#c084fc",
+  s: 12
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 100,
+  y: 148,
+  t: "H adds to less substituted carbon (Markovnikov's rule)"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 470,
+  y: 148,
+  t: "Br adds to more substituted C"
+}));
+
+// ── SN2 ──────────────────────────────────────────────────────────────────
+const SN2_Diag = () => /*#__PURE__*/React.createElement(MS, {
+  w: 590,
+  h: 162
+}, /*#__PURE__*/React.createElement(T, {
+  x: 48,
+  y: 82,
+  t: "HO",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 66,
+  y: 68,
+  t: "\u207B"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 32,
+  y: 82,
+  angle: 180
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 46,
+  y: 67,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 33,74 Q 98,36 152,75"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 168,
+  y: 82,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 168,
+  y: 59,
+  t: "H",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(T, {
+  x: 145,
+  y: 96,
+  t: "H",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(T, {
+  x: 191,
+  y: 96,
+  t: "H",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 168,
+  y1: 70,
+  x2: 168,
+  y2: 64
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 162,
+  y1: 87,
+  x2: 153,
+  y2: 94
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 174,
+  y1: 87,
+  x2: 183,
+  y2: 94
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 176,
+  y: 64,
+  t: "+"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 181,
+  y1: 82,
+  x2: 232,
+  y2: 82
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 207,74 Q 225,52 246,70"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 252,
+  y: 82,
+  t: "Br",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 268,
+  y: 82,
+  angle: 0
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 252,
+  y: 67,
+  angle: 90
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 256,
+  y: 66,
+  t: "\u2212"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 284,
+  y1: 82,
+  x2: 318,
+  y2: 82
+}), /*#__PURE__*/React.createElement(BRK, {
+  x: 322,
+  y: 55,
+  w: 122,
+  h: 52
+}), /*#__PURE__*/React.createElement(T, {
+  x: 342,
+  y: 80,
+  t: "HO",
+  c: "#4ade80",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 356,
+  y1: 80,
+  x2: 366,
+  y2: 80,
+  dash: true
+}), /*#__PURE__*/React.createElement(T, {
+  x: 376,
+  y: 80,
+  t: "C",
+  c: "#e2e8f0",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 386,
+  y1: 80,
+  x2: 396,
+  y2: 80,
+  dash: true
+}), /*#__PURE__*/React.createElement(T, {
+  x: 408,
+  y: 80,
+  t: "Br",
+  c: "#c084fc",
+  s: 12
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 442,
+  y: 64,
+  t: "\u207B"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 376,
+  y: 97,
+  t: "\u2021",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 449,
+  y1: 82,
+  x2: 483,
+  y2: 82
+}), /*#__PURE__*/React.createElement(T, {
+  x: 510,
+  y: 72,
+  t: "HOCH\u2083",
+  c: "#4ade80",
+  s: 12
+}), /*#__PURE__*/React.createElement(T, {
+  x: 510,
+  y: 90,
+  t: "+ Br\u207B",
+  c: "#c084fc",
+  s: 12
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 100,
+  y: 140,
+  t: "backside attack \u2014 180\xB0 to leaving group"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 383,
+  y: 140,
+  t: "transition state (one step \u2014 concerted)"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 510,
+  y: 140,
+  t: "Walden inversion"
+}));
+
+// ── SN1 ──────────────────────────────────────────────────────────────────
+const SN1_Step1 = () => /*#__PURE__*/React.createElement(MS, {
+  w: 500,
+  h: 140
+}, /*#__PURE__*/React.createElement(T, {
+  x: 38,
+  y: 72,
+  t: "(CH\u2083)\u2083C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 82,
+  y1: 72,
+  x2: 112,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 125,
+  y: 72,
+  t: "Br",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 140,
+  y: 72,
+  angle: 0
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 125,
+  y: 57,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 97,64 Q 112,44 128,60"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 152,
+  y1: 72,
+  x2: 192,
+  y2: 72,
+  above: "slow (RDS)"
+}), /*#__PURE__*/React.createElement(BRK, {
+  x: 197,
+  y: 46,
+  w: 120,
+  h: 52
+}), /*#__PURE__*/React.createElement(T, {
+  x: 240,
+  y: 72,
+  t: "(CH\u2083)\u2083C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 278,
+  y: 58,
+  t: "\u207A"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 255,
+  y: 115,
+  t: "planar carbocation \u2014 sp\xB2 hybridised"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 375,
+  y: 55,
+  t: "+",
+  c: "#64748b",
+  s: 16
+}), /*#__PURE__*/React.createElement(T, {
+  x: 410,
+  y: 72,
+  t: "Br\u207B",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 395,
+  y: 72,
+  angle: 180
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 100,
+  y: 125,
+  t: "step 1: C\u2013X bond breaks heterolytically (no Nu needed)"
+}));
+const SN1_Step2 = () => /*#__PURE__*/React.createElement(MS, {
+  w: 500,
+  h: 145
+}, /*#__PURE__*/React.createElement(T, {
+  x: 60,
+  y: 72,
+  t: "(CH\u2083)\u2083C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 98,
+  y: 58,
+  t: "\u207A"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 130,
+  y: 64,
+  t: "+",
+  c: "#64748b",
+  s: 16
+}), /*#__PURE__*/React.createElement(T, {
+  x: 165,
+  y: 72,
+  t: "HO",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 183,
+  y: 58,
+  t: "\u207B"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 150,
+  y: 72,
+  angle: 180
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 165,
+  y: 58,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 152,64 Q 120,38 100,60"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 200,
+  y1: 72,
+  x2: 240,
+  y2: 72,
+  above: "fast"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 295,
+  y: 72,
+  t: "(CH\u2083)\u2083COH",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 250,
+  y: 115,
+  t: "Nu attacks from either face equally \u2192 racemic mixture"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 80,
+  y: 132,
+  t: "step 2: nucleophile attacks planar carbocation (fast)"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 152,56 Q 118,32 100,52"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 152,80 Q 118,105 100,84"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 65,
+  y: 90,
+  t: "top face",
+  c: "#94a3b8"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 65,
+  y: 55,
+  t: "bottom face",
+  c: "#94a3b8"
+}));
+
+// ── Elimination ───────────────────────────────────────────────────────────
+const Elim_Diag = () => /*#__PURE__*/React.createElement(MS, {
+  w: 540,
+  h: 158
+}, /*#__PURE__*/React.createElement(T, {
+  x: 42,
+  y: 72,
+  t: "HO",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 60,
+  y: 58,
+  t: "\u207B"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 27,
+  y: 72,
+  angle: 180
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 42,
+  y: 57,
+  angle: 90
+}), /*#__PURE__*/React.createElement(T, {
+  x: 108,
+  y: 55,
+  t: "H",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 108,
+  y1: 63,
+  x2: 108,
+  y2: 74
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 44,64 Q 72,40 100,58"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 108,
+  y: 85,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 108,
+  y1: 75,
+  x2: 145,
+  y2: 85
+}), /*#__PURE__*/React.createElement(T, {
+  x: 158,
+  y: 85,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 158,
+  y: 63,
+  t: "H\u2082",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 170,
+  y1: 85,
+  x2: 210,
+  y2: 85
+}), /*#__PURE__*/React.createElement(T, {
+  x: 225,
+  y: 85,
+  t: "Br",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 240,
+  y: 85,
+  angle: 0
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 225,
+  y: 70,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 108,74 Q 130,58 148,78"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 180,78 Q 200,58 222,72"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 255,
+  y1: 85,
+  x2: 295,
+  y2: 85
+}), /*#__PURE__*/React.createElement(T, {
+  x: 325,
+  y: 73,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 337,
+  y1: 73,
+  x2: 365,
+  y2: 73,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 377,
+  y: 73,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 415,
+  y: 68,
+  t: "+",
+  c: "#64748b",
+  s: 15
+}), /*#__PURE__*/React.createElement(T, {
+  x: 445,
+  y: 73,
+  t: "H\u2082O",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 415,
+  y: 88,
+  t: "+",
+  c: "#64748b",
+  s: 15
+}), /*#__PURE__*/React.createElement(T, {
+  x: 445,
+  y: 90,
+  t: "Br\u207B",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 120,
+  y: 142,
+  t: "3 simultaneous bond changes: C\u2013H breaks, C=C forms, C\u2013Br breaks"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 380,
+  y: 142,
+  t: "E2 mechanism (one step)"
+}));
+
+// ── Nucleophilic Addition (Carbonyl) ─────────────────────────────────────
+const HCN_Add = () => /*#__PURE__*/React.createElement(MS, {
+  w: 530,
+  h: 165
+}, /*#__PURE__*/React.createElement(T, {
+  x: 118,
+  y: 75,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 130,
+  y1: 75,
+  x2: 162,
+  y2: 75,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 175,
+  y: 75,
+  t: "O",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 192,
+  y: 75,
+  angle: 0
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 175,
+  y: 59,
+  angle: 90
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 115,
+  y: 60,
+  t: "+"
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 170,
+  y: 58,
+  t: "\u2212"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 118,
+  y1: 65,
+  x2: 100,
+  y2: 52
+}), /*#__PURE__*/React.createElement(T, {
+  x: 90,
+  y: 46,
+  t: "R",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 105,
+  y1: 78,
+  x2: 87,
+  y2: 88
+}), /*#__PURE__*/React.createElement(T, {
+  x: 78,
+  y: 95,
+  t: "H",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(T, {
+  x: 40,
+  y: 75,
+  t: "CN",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 58,
+  y: 62,
+  t: "\u207B"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 25,
+  y: 75,
+  angle: 180
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 40,
+  y: 60,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 27,67 Q 72,38 110,70"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 143,68 Q 158,50 172,62"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 205,
+  y1: 75,
+  x2: 245,
+  y2: 75
+}), /*#__PURE__*/React.createElement(BRK, {
+  x: 250,
+  y: 50,
+  w: 125,
+  h: 52
+}), /*#__PURE__*/React.createElement(T, {
+  x: 268,
+  y: 75,
+  t: "CN",
+  c: "#4ade80",
+  s: 13
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 283,
+  y1: 75,
+  x2: 302,
+  y2: 75
+}), /*#__PURE__*/React.createElement(T, {
+  x: 314,
+  y: 75,
+  t: "C",
+  c: "#e2e8f0",
+  s: 13
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 326,
+  y1: 75,
+  x2: 355,
+  y2: 75
+}), /*#__PURE__*/React.createElement(T, {
+  x: 367,
+  y: 75,
+  t: "O",
+  c: "#f87171",
+  s: 13
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 376,
+  y: 62,
+  t: "\u207B"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 310,
+  y: 120,
+  t: "alkoxide intermediate"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 380,
+  y1: 75,
+  x2: 415,
+  y2: 75
+}), /*#__PURE__*/React.createElement(T, {
+  x: 430,
+  y: 75,
+  t: "+",
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 445,
+  y: 75,
+  t: "H\u207A",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 460,
+  y1: 75,
+  x2: 495,
+  y2: 75
+}), /*#__PURE__*/React.createElement(T, {
+  x: 510,
+  y: 68,
+  t: "OH",
+  c: "#f87171",
+  s: 12
+}), /*#__PURE__*/React.createElement(T, {
+  x: 510,
+  y: 88,
+  t: "group",
+  c: "#64748b",
+  s: 10
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 120,
+  y: 148,
+  t: "CN\u207B attacks the \u03B4+ carbonyl carbon (step 1)"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 430,
+  y: 148,
+  t: "O\u207B protonated by HCN (step 2)"
+}));
+const NaBH4_Add = () => /*#__PURE__*/React.createElement(MS, {
+  w: 490,
+  h: 148
+}, /*#__PURE__*/React.createElement(T, {
+  x: 140,
+  y: 72,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 152,
+  y1: 72,
+  x2: 183,
+  y2: 72,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 196,
+  y: 72,
+  t: "O",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 213,
+  y: 72,
+  angle: 0
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 196,
+  y: 56,
+  angle: 90
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 138,
+  y: 56,
+  t: "+"
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 192,
+  y: 56,
+  t: "\u2212"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 130,
+  y1: 65,
+  x2: 112,
+  y2: 52
+}), /*#__PURE__*/React.createElement(T, {
+  x: 102,
+  y: 46,
+  t: "R",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 128,
+  y1: 78,
+  x2: 110,
+  y2: 90
+}), /*#__PURE__*/React.createElement(T, {
+  x: 100,
+  y: 97,
+  t: "H/R",
+  c: "#64748b",
+  s: 11
+}), /*#__PURE__*/React.createElement(T, {
+  x: 50,
+  y: 72,
+  t: "H",
+  c: "#4ade80",
+  s: 16
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 62,
+  y: 58,
+  t: "\u207B"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 58,64 Q 95,36 132,66"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 160,65 Q 175,46 188,58"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 225,
+  y1: 72,
+  x2: 265,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 285,
+  y: 72,
+  t: "H",
+  c: "#4ade80",
+  s: 13
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 293,
+  y1: 72,
+  x2: 308,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 320,
+  y: 72,
+  t: "C",
+  c: "#e2e8f0",
+  s: 13
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 332,
+  y1: 72,
+  x2: 355,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 367,
+  y: 72,
+  t: "O",
+  c: "#f87171",
+  s: 13
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 376,
+  y: 59,
+  t: "\u207B"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 390,
+  y1: 72,
+  x2: 430,
+  y2: 72,
+  above: "H\u2082O"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 460,
+  y: 65,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 472,
+  y1: 65,
+  x2: 490,
+  y2: 65
+}), /*#__PURE__*/React.createElement(T, {
+  x: 498,
+  y: 65,
+  t: "OH",
+  c: "#f87171",
+  s: 12
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 150,
+  y: 130,
+  t: "H\u207B (hydride) ion acts as nucleophile"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 400,
+  y: 130,
+  t: "alcohol product"
+}));
+
+// ── Benzene EAS ───────────────────────────────────────────────────────────
+const Benz_Nitration = () => /*#__PURE__*/React.createElement(MS, {
+  w: 580,
+  h: 170
+}, /*#__PURE__*/React.createElement(HdrLbl, {
+  x: 130,
+  y: 18,
+  t: "Step 1: Generate electrophile (NO\u2082\u207A)",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 38,
+  y: 45,
+  t: "HNO\u2083",
+  c: "#e2e8f0",
+  s: 12
+}), /*#__PURE__*/React.createElement(T, {
+  x: 78,
+  y: 38,
+  t: "+",
+  c: "#64748b",
+  s: 14
+}), /*#__PURE__*/React.createElement(T, {
+  x: 105,
+  y: 45,
+  t: "H\u2082SO\u2084",
+  c: "#e2e8f0",
+  s: 12
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 145,
+  y1: 45,
+  x2: 185,
+  y2: 45
+}), /*#__PURE__*/React.createElement(T, {
+  x: 215,
+  y: 45,
+  t: "NO\u2082\u207A",
+  c: "#facc15",
+  s: 13
+}), /*#__PURE__*/React.createElement(T, {
+  x: 258,
+  y: 38,
+  t: "+",
+  c: "#64748b",
+  s: 14
+}), /*#__PURE__*/React.createElement(T, {
+  x: 290,
+  y: 45,
+  t: "HSO\u2084\u207B",
+  c: "#e2e8f0",
+  s: 12
+}), /*#__PURE__*/React.createElement(T, {
+  x: 345,
+  y: 38,
+  t: "+",
+  c: "#64748b",
+  s: 14
+}), /*#__PURE__*/React.createElement(T, {
+  x: 375,
+  y: 45,
+  t: "H\u2082O",
+  c: "#e2e8f0",
+  s: 12
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 208,
+  y: 62,
+  t: "nitronium ion (electrophile)"
+}), /*#__PURE__*/React.createElement(HdrLbl, {
+  x: 150,
+  y: 88,
+  t: "Step 2: NO\u2082\u207A attacks ring",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(Benzene, {
+  cx: 70,
+  cy: 128,
+  r: 28,
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 110,
+  y: 121,
+  t: "+",
+  c: "#64748b",
+  s: 14
+}), /*#__PURE__*/React.createElement(T, {
+  x: 138,
+  y: 128,
+  t: "NO\u2082",
+  c: "#facc15"
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 158,
+  y: 114,
+  t: "\u207A"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 92,112 Q 118,100 132,118"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 175,
+  y1: 128,
+  x2: 210,
+  y2: 128
+}), /*#__PURE__*/React.createElement(BRK, {
+  x: 215,
+  y: 105,
+  w: 125,
+  h: 48
+}), /*#__PURE__*/React.createElement(Benzene, {
+  cx: 260,
+  cy: 128,
+  r: 25,
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 295,
+  y: 108,
+  t: "NO\u2082",
+  c: "#facc15",
+  s: 11
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 338,
+  y: 110,
+  t: "\u207A"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 278,
+  y: 165,
+  t: "arenium ion (\u03C3-complex)"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 344,
+  y1: 128,
+  x2: 380,
+  y2: 128
+}), /*#__PURE__*/React.createElement(T, {
+  x: 395,
+  y: 128,
+  t: "\u2212H\u207A",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 415,
+  y1: 128,
+  x2: 445,
+  y2: 128
+}), /*#__PURE__*/React.createElement(Benzene, {
+  cx: 490,
+  cy: 128,
+  r: 25,
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 490,
+  y: 108,
+  t: "NO\u2082",
+  c: "#facc15",
+  s: 11
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 490,
+  y: 165,
+  t: "nitrobenzene product"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 270,
+  y: 88,
+  t: "aromaticity restored by losing H\u207A \u2014 driving force"
+}));
+const Benz_Halogen = () => /*#__PURE__*/React.createElement(MS, {
+  w: 560,
+  h: 155
+}, /*#__PURE__*/React.createElement(HdrLbl, {
+  x: 140,
+  y: 18,
+  t: "Friedel-Crafts: AlCl\u2083 generates Cl\u207A equivalent",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 38,
+  y: 45,
+  t: "Cl",
+  c: "#4ade80",
+  s: 13
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 50,
+  y1: 45,
+  x2: 70,
+  y2: 45
+}), /*#__PURE__*/React.createElement(T, {
+  x: 82,
+  y: 45,
+  t: "Cl",
+  c: "#4ade80",
+  s: 13
+}), /*#__PURE__*/React.createElement(T, {
+  x: 100,
+  y: 38,
+  t: "+",
+  c: "#64748b",
+  s: 13
+}), /*#__PURE__*/React.createElement(T, {
+  x: 118,
+  y: 45,
+  t: "AlCl\u2083",
+  c: "#e2e8f0",
+  s: 13
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 60,37 Q 80,22 95,38"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 148,
+  y1: 45,
+  x2: 188,
+  y2: 45
+}), /*#__PURE__*/React.createElement(T, {
+  x: 210,
+  y: 45,
+  t: "Cl\u207A",
+  c: "#facc15",
+  s: 13
+}), /*#__PURE__*/React.createElement(T, {
+  x: 240,
+  y: 38,
+  t: "...",
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 268,
+  y: 45,
+  t: "AlCl\u2084\u207B",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 210,
+  y: 65,
+  t: "electrophilic Cl species formed"
+}), /*#__PURE__*/React.createElement(Benzene, {
+  cx: 70,
+  cy: 118,
+  r: 27,
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 110,
+  y: 112,
+  t: "+",
+  c: "#64748b",
+  s: 14
+}), /*#__PURE__*/React.createElement(T, {
+  x: 135,
+  y: 118,
+  t: "Cl\u207A",
+  c: "#facc15"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 92,102 Q 115,88 130,110"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 158,
+  y1: 118,
+  x2: 195,
+  y2: 118
+}), /*#__PURE__*/React.createElement(BRK, {
+  x: 200,
+  y: 95,
+  w: 110,
+  h: 48
+}), /*#__PURE__*/React.createElement(Benzene, {
+  cx: 242,
+  cy: 118,
+  r: 22,
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 272,
+  y: 100,
+  t: "Cl",
+  c: "#4ade80",
+  s: 11
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 308,
+  y: 100,
+  t: "\u207A"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 315,
+  y1: 118,
+  x2: 352,
+  y2: 118
+}), /*#__PURE__*/React.createElement(T, {
+  x: 365,
+  y: 118,
+  t: "\u2212H\u207A",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 388,
+  y1: 118,
+  x2: 422,
+  y2: 118
+}), /*#__PURE__*/React.createElement(Benzene, {
+  cx: 462,
+  cy: 118,
+  r: 24,
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 462,
+  y: 99,
+  t: "Cl",
+  c: "#4ade80",
+  s: 11
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 462,
+  y: 150,
+  t: "chlorobenzene"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 242,
+  y: 150,
+  t: "arenium ion"
+}));
+
+// ── Acyl Chlorides ────────────────────────────────────────────────────────
+const Acyl_H2O = () => /*#__PURE__*/React.createElement(MS, {
+  w: 560,
+  h: 162
+}, /*#__PURE__*/React.createElement(T, {
+  x: 52,
+  y: 75,
+  t: "R",
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 64,
+  y1: 75,
+  x2: 88,
+  y2: 75
+}), /*#__PURE__*/React.createElement(T, {
+  x: 100,
+  y: 75,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 112,
+  y1: 75,
+  x2: 140,
+  y2: 75,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 153,
+  y: 75,
+  t: "O",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 112,
+  y1: 80,
+  x2: 140,
+  y2: 90
+}), /*#__PURE__*/React.createElement(T, {
+  x: 153,
+  y: 95,
+  t: "Cl",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 168,
+  y: 95,
+  angle: 0
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 153,
+  y: 108,
+  angle: 270
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 98,
+  y: 59,
+  t: "+"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 38,
+  y: 55,
+  t: "H\u2082O",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 22,
+  y: 55,
+  angle: 180
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 38,
+  y: 42,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 24,47 Q 62,25 95,65"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 122,68 Q 138,52 148,66"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 180,
+  y1: 82,
+  x2: 218,
+  y2: 82,
+  above: "add'n"
+}), /*#__PURE__*/React.createElement(BRK, {
+  x: 222,
+  y: 52,
+  w: 130,
+  h: 58
+}), /*#__PURE__*/React.createElement(T, {
+  x: 242,
+  y: 82,
+  t: "R",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 253,
+  y1: 82,
+  x2: 270,
+  y2: 82
+}), /*#__PURE__*/React.createElement(T, {
+  x: 282,
+  y: 82,
+  t: "C",
+  c: "#e2e8f0",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 294,
+  y1: 75,
+  x2: 308,
+  y2: 65
+}), /*#__PURE__*/React.createElement(T, {
+  x: 318,
+  y: 60,
+  t: "OH",
+  c: "#f87171",
+  s: 11
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 294,
+  y1: 89,
+  x2: 308,
+  y2: 99
+}), /*#__PURE__*/React.createElement(T, {
+  x: 320,
+  y: 104,
+  t: "Cl",
+  c: "#c084fc",
+  s: 11
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 350,
+  y: 59,
+  t: "\u207B",
+  c: "#fca5a5"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 285,
+  y: 128,
+  t: "tetrahedral intermediate"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 358,
+  y1: 82,
+  x2: 395,
+  y2: 82,
+  above: "elim'n"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 415,
+  y: 72,
+  t: "R",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 427,
+  y1: 72,
+  x2: 448,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 460,
+  y: 72,
+  t: "C",
+  c: "#e2e8f0",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 472,
+  y1: 72,
+  x2: 498,
+  y2: 72,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 510,
+  y: 72,
+  t: "O",
+  c: "#f87171",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 472,
+  y1: 78,
+  x2: 498,
+  y2: 88
+}), /*#__PURE__*/React.createElement(T, {
+  x: 510,
+  y: 92,
+  t: "OH",
+  c: "#f87171",
+  s: 12
+}), /*#__PURE__*/React.createElement(T, {
+  x: 415,
+  y: 100,
+  t: "+ HCl",
+  c: "#c084fc",
+  s: 12
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 100,
+  y: 148,
+  t: "nucleophilic addition\u2013elimination (two steps overall)"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 460,
+  y: 148,
+  t: "carboxylic acid product"
+}));
+const Acyl_NH3 = () => /*#__PURE__*/React.createElement(MS, {
+  w: 530,
+  h: 148
+}, /*#__PURE__*/React.createElement(T, {
+  x: 52,
+  y: 72,
+  t: "R",
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 64,
+  y1: 72,
+  x2: 88,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 100,
+  y: 72,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 112,
+  y1: 72,
+  x2: 140,
+  y2: 72,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 153,
+  y: 72,
+  t: "O",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 112,
+  y1: 77,
+  x2: 140,
+  y2: 88
+}), /*#__PURE__*/React.createElement(T, {
+  x: 153,
+  y: 92,
+  t: "Cl",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 98,
+  y: 56,
+  t: "+"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 38,
+  y: 52,
+  t: "NH\u2083",
+  c: "#60a5fa"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 23,
+  y: 52,
+  angle: 180
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 38,
+  y: 38,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 24,44 Q 62,22 95,62"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 122,65 Q 137,48 148,62"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 178,
+  y1: 78,
+  x2: 215,
+  y2: 78
+}), /*#__PURE__*/React.createElement(T, {
+  x: 235,
+  y: 72,
+  t: "R",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 247,
+  y1: 72,
+  x2: 268,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 280,
+  y: 72,
+  t: "C",
+  c: "#e2e8f0",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 292,
+  y1: 72,
+  x2: 315,
+  y2: 72,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 327,
+  y: 72,
+  t: "O",
+  c: "#f87171",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 292,
+  y1: 78,
+  x2: 315,
+  y2: 88
+}), /*#__PURE__*/React.createElement(T, {
+  x: 327,
+  y: 92,
+  t: "NH\u2082",
+  c: "#60a5fa",
+  s: 12
+}), /*#__PURE__*/React.createElement(T, {
+  x: 235,
+  y: 100,
+  t: "+ NH\u2084Cl",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 280,
+  y: 130,
+  t: "primary amide product"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 80,
+  y: 130,
+  t: "lone pair on N attacks \u03B4+ C"
+}));
+
+// ── Esterification ────────────────────────────────────────────────────────
+const Ester_Form = () => /*#__PURE__*/React.createElement(MS, {
+  w: 560,
+  h: 155
+}, /*#__PURE__*/React.createElement(T, {
+  x: 40,
+  y: 72,
+  t: "R",
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 52,
+  y1: 72,
+  x2: 75,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 87,
+  y: 72,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 99,
+  y1: 72,
+  x2: 126,
+  y2: 72,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 138,
+  y: 72,
+  t: "O",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 99,
+  y1: 77,
+  x2: 126,
+  y2: 88
+}), /*#__PURE__*/React.createElement(T, {
+  x: 138,
+  y: 92,
+  t: "OH",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 158,
+  y: 65,
+  t: "+",
+  c: "#64748b",
+  s: 16
+}), /*#__PURE__*/React.createElement(T, {
+  x: 180,
+  y: 72,
+  t: "HO",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 198,
+  y1: 72,
+  x2: 220,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 232,
+  y: 72,
+  t: "R'",
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 167,
+  y: 72,
+  angle: 180
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 180,
+  y: 57,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 168,64 Q 128,40 95,64"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 108,65 Q 122,48 132,65"
+}), /*#__PURE__*/React.createElement(EA, {
+  x1: 255,
+  y: 75,
+  x2: 305,
+  y2: 75
+}), /*#__PURE__*/React.createElement(T, {
+  x: 280,
+  y: 88,
+  t: "H\u207A, \u0394",
+  c: "#94a3b8",
+  s: 10
+}), /*#__PURE__*/React.createElement(T, {
+  x: 318,
+  y: 72,
+  t: "R",
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 330,
+  y1: 72,
+  x2: 353,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 365,
+  y: 72,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 377,
+  y1: 72,
+  x2: 404,
+  y2: 72,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 416,
+  y: 72,
+  t: "O",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 377,
+  y1: 77,
+  x2: 404,
+  y2: 88
+}), /*#__PURE__*/React.createElement(T, {
+  x: 416,
+  y: 92,
+  t: "O",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 428,
+  y1: 92,
+  x2: 448,
+  y2: 92
+}), /*#__PURE__*/React.createElement(T, {
+  x: 460,
+  y: 92,
+  t: "R'",
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 475,
+  y: 65,
+  t: "+ H\u2082O",
+  c: "#e2e8f0",
+  s: 12
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 100,
+  y: 138,
+  t: "alcohol OH lone pair attacks \u03B4+ carbonyl C"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 400,
+  y: 138,
+  t: "ester linkage (C\u2013O\u2013C=O)"
+}));
+const Ester_Hydrolysis = () => /*#__PURE__*/React.createElement(MS, {
+  w: 540,
+  h: 148
+}, /*#__PURE__*/React.createElement(T, {
+  x: 38,
+  y: 72,
+  t: "R",
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 50,
+  y1: 72,
+  x2: 73,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 85,
+  y: 72,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 97,
+  y1: 72,
+  x2: 124,
+  y2: 72,
+  n: 2
+}), /*#__PURE__*/React.createElement(T, {
+  x: 136,
+  y: 72,
+  t: "O",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 97,
+  y1: 77,
+  x2: 124,
+  y2: 88
+}), /*#__PURE__*/React.createElement(T, {
+  x: 136,
+  y: 92,
+  t: "O",
+  c: "#f87171"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 148,
+  y1: 92,
+  x2: 170,
+  y2: 92
+}), /*#__PURE__*/React.createElement(T, {
+  x: 182,
+  y: 92,
+  t: "R'",
+  c: "#64748b"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 38,
+  y: 45,
+  t: "OH",
+  c: "#4ade80"
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 57,
+  y: 33,
+  t: "\u207B"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 24,
+  y: 45,
+  angle: 180
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 38,
+  y: 30,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 25,37 Q 58,15 82,62"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 106,65 Q 120,48 130,65"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 200,
+  y1: 80,
+  x2: 238,
+  y2: 80,
+  above: "base hydrolysis"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 258,
+  y: 72,
+  t: "R",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 270,
+  y1: 72,
+  x2: 290,
+  y2: 72
+}), /*#__PURE__*/React.createElement(T, {
+  x: 302,
+  y: 72,
+  t: "COO",
+  c: "#f87171",
+  s: 12
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 330,
+  y: 60,
+  t: "\u207B"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 258,
+  y: 100,
+  t: "+ R'OH",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 295,
+  y: 132,
+  t: "carboxylate ion (irreversible \u2014 drives to completion)"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 408,
+  y: 72,
+  t: "vs.",
+  c: "#64748b",
+  s: 12
+}), /*#__PURE__*/React.createElement(T, {
+  x: 430,
+  y: 60,
+  t: "Acid hydrolysis:",
+  c: "#94a3b8",
+  s: 11
+}), /*#__PURE__*/React.createElement(T, {
+  x: 430,
+  y: 78,
+  t: "H\u207A + H\u2082O, \u0394",
+  c: "#94a3b8",
+  s: 11
+}), /*#__PURE__*/React.createElement(T, {
+  x: 430,
+  y: 96,
+  t: "reversible",
+  c: "#94a3b8",
+  s: 11
+}), /*#__PURE__*/React.createElement(T, {
+  x: 430,
+  y: 114,
+  t: "\u2192 RCOOH + R'OH",
+  c: "#f87171",
+  s: 11
+}));
+
+// ── Amines ────────────────────────────────────────────────────────────────
+const Amine_Basic = () => /*#__PURE__*/React.createElement(MS, {
+  w: 480,
+  h: 142
+}, /*#__PURE__*/React.createElement(HdrLbl, {
+  x: 240,
+  y: 18,
+  t: "Amines as Br\xF8nsted-Lowry bases \u2014 lone pair accepts H\u207A",
+  c: "#34d399"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 55,
+  y: 82,
+  t: "R-NH\u2082",
+  c: "#60a5fa"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 92,
+  y: 70,
+  angle: 90
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 92,
+  y: 70,
+  angle: 135
+}), /*#__PURE__*/React.createElement(T, {
+  x: 128,
+  y: 74,
+  t: "+",
+  c: "#64748b",
+  s: 16
+}), /*#__PURE__*/React.createElement(T, {
+  x: 158,
+  y: 82,
+  t: "H\u2082O",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 94,62 Q 120,40 152,72"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 165,72 Q 175,55 180,62"
+}), /*#__PURE__*/React.createElement(EA, {
+  x1: 192,
+  y: 82,
+  x2: 240,
+  y2: 82
+}), /*#__PURE__*/React.createElement(T, {
+  x: 265,
+  y: 72,
+  t: "RNH\u2083",
+  c: "#60a5fa",
+  s: 13
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 296,
+  y: 58,
+  t: "\u207A"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 310,
+  y: 74,
+  t: "+",
+  c: "#64748b",
+  s: 14
+}), /*#__PURE__*/React.createElement(T, {
+  x: 338,
+  y: 82,
+  t: "OH\u207B",
+  c: "#f87171",
+  s: 13
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 130,
+  y: 125,
+  t: "lone pair on N is the source of basicity"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 320,
+  y: 125,
+  t: "equilibrium lies LEFT (weak base)"
+}));
+const Amine_NuSub = () => /*#__PURE__*/React.createElement(MS, {
+  w: 520,
+  h: 148
+}, /*#__PURE__*/React.createElement(HdrLbl, {
+  x: 260,
+  y: 18,
+  t: "Amine as nucleophile \u2014 N-alkylation",
+  c: "#34d399"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 48,
+  y: 82,
+  t: "R-NH\u2082",
+  c: "#60a5fa"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 88,
+  y: 70,
+  angle: 90
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 90,62 Q 140,35 178,72"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 155,
+  y: 68,
+  t: "\u03B4+",
+  c: "#fde68a",
+  s: 10
+}), /*#__PURE__*/React.createElement(T, {
+  x: 195,
+  y: 82,
+  t: "C",
+  c: "#e2e8f0"
+}), /*#__PURE__*/React.createElement(BD, {
+  x1: 207,
+  y1: 82,
+  x2: 235,
+  y2: 82
+}), /*#__PURE__*/React.createElement(T, {
+  x: 248,
+  y: 82,
+  t: "Br",
+  c: "#c084fc"
+}), /*#__PURE__*/React.createElement(LP, {
+  x: 263,
+  y: 82,
+  angle: 0
+}), /*#__PURE__*/React.createElement(Dl, {
+  x: 244,
+  y: 66,
+  t: "\u2212"
+}), /*#__PURE__*/React.createElement(OA, {
+  d: "M 220,74 Q 236,54 248,68"
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 270,
+  y1: 82,
+  x2: 308,
+  y2: 82
+}), /*#__PURE__*/React.createElement(T, {
+  x: 330,
+  y: 72,
+  t: "R\u2082NH\u2082",
+  c: "#60a5fa",
+  s: 13
+}), /*#__PURE__*/React.createElement(Ch, {
+  x: 368,
+  y: 58,
+  t: "\u207A"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 385,
+  y: 74,
+  t: "Br\u207B",
+  c: "#c084fc",
+  s: 13
+}), /*#__PURE__*/React.createElement(RA, {
+  x1: 408,
+  y1: 82,
+  x2: 440,
+  y2: 82,
+  above: "+R-NH\u2082"
+}), /*#__PURE__*/React.createElement(T, {
+  x: 468,
+  y: 72,
+  t: "R\u2082NH",
+  c: "#60a5fa",
+  s: 13
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 180,
+  y: 132,
+  t: "mixture of primary, secondary, tertiary amines + quaternary salt"
+}), /*#__PURE__*/React.createElement(Lbl, {
+  x: 430,
+  y: 132,
+  t: "excess NH\u2083 limits this"
+}));
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  CONTENT
+// ═══════════════════════════════════════════════════════════════════════════
+const content = {
+  frs: c => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(InfoBox, {
+    bg: "rgba(250,204,21,0.06)",
+    border: "rgba(250,204,21,0.2)"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#fde68a"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Key idea:")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#fde68a"
+    }
+  }, " Free radical substitution uses UV light to homolytically break bonds \u2014 each atom gets ONE electron (fishhook arrow). Three stages: initiation, propagation (\xD72 steps), termination.")), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "Stage 1 \u2014 Initiation",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Cl\u2082 \u2192 2Cl\u2022",
+    type: "Homolytic fission",
+    color: c,
+    reagents: "Cl\u2082 (or Br\u2082)",
+    conditions: "UV light",
+    diagram: /*#__PURE__*/React.createElement(FRS_Init, null),
+    steps: ["UV light provides energy to break the Cl–Cl bond.", "Each Cl atom gets one electron → two Cl• radicals formed.", "Fishhook (half-headed) arrows show one electron moving — NOT a full curly arrow.", "This only happens once — just to start the chain."],
+    note: "Homolytic fission: both electrons split equally between atoms. Heterolytic fission (like in ionic mechanisms) has both electrons going to one atom."
+  }), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "Stage 2 \u2014 Propagation (chain reaction)",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Two-step chain",
+    type: "Radical substitution",
+    color: c,
+    reagents: "CH\u2084 + Cl\u2022",
+    conditions: "UV, gas phase",
+    diagram: /*#__PURE__*/React.createElement(FRS_Prop, null),
+    steps: ["Step A: Cl• attacks a C–H bond. One electron from C–H joins H to form HCl. The other electron stays on C as •CH₃.", "Step B: •CH₃ attacks Cl₂. One electron from Cl–Cl joins C to form CH₃Cl. The other electron leaves as Cl•.", "The Cl• produced in step B starts step A again — this is why it's called a chain reaction.", "These two steps repeat thousands of times per initiation event."],
+    note: "Propagation steps always consume one radical and produce one radical \u2014 net radicals = constant. The chain only ends in termination."
+  }), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "Stage 3 \u2014 Termination",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Any two radicals combine",
+    type: "Chain termination",
+    color: c,
+    diagram: /*#__PURE__*/React.createElement(FRS_Term, null),
+    steps: ["Two radicals collide and their unpaired electrons form a new covalent bond.", "No new radicals are produced — the chain stops.", "Multiple products are possible: Cl₂, CH₃Cl, or C₂H₆.", "C₂H₆ is an unwanted by-product — this is why FRS gives a mixture of products."],
+    note: "FRS always gives a mixture (CH\u2083Cl, CH\u2082Cl\u2082, CHCl\u2083, CCl\u2084) \u2014 this is a weakness of the reaction. Excess CH\u2084 favours monosubstitution."
+  })),
+  ea: c => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(InfoBox, {
+    bg: "rgba(74,222,128,0.06)",
+    border: "rgba(74,222,128,0.2)"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#86efac"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Key idea:")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#86efac"
+    }
+  }, " The electron-rich C=C \u03C0 bond acts as a nucleophile and attacks an electrophile. The \u03C0 bond electrons are the source \u2014 always draw the curly arrow FROM the C=C.")), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "Addition of Br\u2082",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Alkene + Br\u2082 \u2014 Step 1: Bromonium formation",
+    type: "Electrophilic addition",
+    color: c,
+    reagents: "Br\u2082",
+    conditions: "Room temperature (no UV \u2014 that would be FRS)",
+    obs: "Orange/brown bromine water decolourises",
+    diagram: /*#__PURE__*/React.createElement(EA_Br2_Step1, null),
+    steps: ["The electron-dense π bond polarises the Br–Br bond — Br nearest alkene becomes δ+.", "π electrons attack the δ+ Br. Simultaneously, the Br–Br bond breaks heterolytically → Br⁻ leaves.", "A cyclic bromonium ion intermediate forms (3-membered ring with Br bridging both carbons).", "This intermediate prevents rotation about the C–C bond."],
+    note: "The bromonium ion explains WHY you get anti addition \u2014 the Br\u207A bridges from one face, so Br\u207B must attack from the opposite face."
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Alkene + Br\u2082 \u2014 Step 2: Br\u207B attacks bromonium",
+    type: "Electrophilic addition",
+    color: c,
+    diagram: /*#__PURE__*/React.createElement(EA_Br2_Step2, null),
+    steps: ["Br⁻ uses a lone pair to attack one of the carbons from the back face (opposite the bridging Br).", "The C–Br bond in the bromonium breaks, freeing that carbon.", "Product: 1,2-dibromoalkane with ANTI stereochemistry (the two Br atoms are trans).", "This is the test for a C=C double bond — bromine water decolourises."],
+    note: "Anti addition is important for AQA \u2014 it arises from the bromonium mechanism. Syn addition is NOT possible with Br\u2082."
+  }), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "Addition of HBr (Markovnikov)",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Alkene + HBr",
+    type: "Electrophilic addition",
+    color: c,
+    reagents: "HBr",
+    conditions: "Room temperature, no catalyst",
+    diagram: /*#__PURE__*/React.createElement(EA_HBr, null),
+    steps: ["HBr is polarised (H is δ+, Br is δ−) because Br is more electronegative.", "The π electrons attack the δ+ H. H–Br bond breaks, Br⁻ leaves as the leaving group.", "A carbocation forms on the carbon that had more H's. The more substituted carbocation is more stable (Markovnikov's rule).", "Br⁻ uses a lone pair to attack the carbocation → product."],
+    note: "Markovnikov's rule: H adds to the carbon already bearing more H's (i.e. the less substituted carbon). The major product is from the more stable (more substituted) carbocation."
+  })),
+  sn2: c => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(InfoBox, {
+    bg: "rgba(96,165,250,0.06)",
+    border: "rgba(96,165,250,0.2)"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#bfdbfe"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Key idea:")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#bfdbfe"
+    }
+  }, " SN2 is a ONE-STEP mechanism. The nucleophile attacks from 180\xB0 to the leaving group (backside attack), and as it forms a bond, the leaving group departs simultaneously. Configuration is INVERTED (Walden inversion). SN2 is favoured by primary halogenoalkanes.")), /*#__PURE__*/React.createElement(MCard, {
+    title: "Nucleophilic Substitution \u2014 SN2",
+    type: "One-step, bimolecular",
+    color: c,
+    reagents: "NaOH (aq) or KCN or NH\u2083",
+    conditions: "Aqueous solution, heat (or ethanol for CN\u207B and NH\u2083)",
+    diagram: /*#__PURE__*/React.createElement(SN2_Diag, null),
+    steps: ["The nucleophile (e.g. HO⁻) uses a lone pair to attack the δ+ carbon from exactly 180° behind the leaving group.", "As the Nu–C bond forms, the C–Br bond weakens and stretches simultaneously — ONE STEP (concerted).", "The transition state has five groups around the central carbon (trigonal bipyramidal), with partial bonds to both Nu and LG.", "The leaving group departs as Br⁻, taking both electrons from the C–Br bond.", "The three remaining groups on C 'flip through' like an umbrella — Walden inversion of configuration."],
+    note: "Rate = k[Nu][RX] \u2014 bimolecular. Bulky (tertiary) substrates cannot be attacked from behind \u2192 SN1 instead. Primary is ideal for SN2.",
+    extra: /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 14
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        color: "#94a3b8",
+        fontSize: "0.82em",
+        fontWeight: 700,
+        marginBottom: 8
+      }
+    }, "Common SN2 Reactions:"), /*#__PURE__*/React.createElement("table", {
+      style: {
+        width: "100%",
+        borderCollapse: "collapse",
+        fontSize: "0.8em",
+        color: "#cbd5e1"
+      }
+    }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", {
+      style: {
+        borderBottom: "1px solid rgba(255,255,255,0.12)"
+      }
+    }, ["Nucleophile", "Reagent/solvent", "Product"].map(h => /*#__PURE__*/React.createElement("th", {
+      key: h,
+      style: {
+        padding: "6px 10px",
+        textAlign: "left",
+        color: c
+      }
+    }, h)))), /*#__PURE__*/React.createElement("tbody", null, [["HO⁻", "NaOH (aq)", "Alcohol (–OH)"], ["CN⁻", "KCN / ethanol", "Nitrile (–CN, chain +1C)"], ["NH₃", "Excess NH₃ / ethanol", "Amine (–NH₂, then further)"], ["RO⁻", "Alkoxide / ethanol", "Ether (–OR)"]].map(([a, b, cc]) => /*#__PURE__*/React.createElement("tr", {
+      key: a,
+      style: {
+        borderBottom: "1px solid rgba(255,255,255,0.06)"
+      }
+    }, /*#__PURE__*/React.createElement("td", {
+      style: {
+        padding: "6px 10px",
+        fontFamily: "monospace"
+      }
+    }, a), /*#__PURE__*/React.createElement("td", {
+      style: {
+        padding: "6px 10px"
+      }
+    }, b), /*#__PURE__*/React.createElement("td", {
+      style: {
+        padding: "6px 10px"
+      }
+    }, cc))))))
+  })),
+  sn1: c => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(InfoBox, {
+    bg: "rgba(167,139,250,0.06)",
+    border: "rgba(167,139,250,0.2)"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#ddd6fe"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Key idea:")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#ddd6fe"
+    }
+  }, " SN1 is a TWO-STEP mechanism. The C\u2013X bond breaks first to form a CARBOCATION intermediate (slow, rate-determining step). Then the nucleophile attacks. Favoured by TERTIARY halogenoalkanes. Gives RACEMIC mixture because Nu can attack from either face of the flat sp\xB2 carbocation.")), /*#__PURE__*/React.createElement(MCard, {
+    title: "SN1 \u2014 Step 1: Ionisation (slow, RDS)",
+    type: "Rate-determining step",
+    color: c,
+    reagents: "NaOH (aq) or H\u2082O",
+    conditions: "Polar protic solvent (water/ethanol)",
+    diagram: /*#__PURE__*/React.createElement(SN1_Step1, null),
+    steps: ["The C–X bond breaks heterolytically — BOTH electrons go to X (leaving group).", "A planar carbocation forms — the central C is sp² hybridised with an empty p orbital.", "This step is SLOW because it requires energy to separate charges.", "Tertiary carbocations are most stable (3 alkyl groups donating electron density).", "This step does NOT involve the nucleophile — rate = k[RX] only (unimolecular)."],
+    note: "The carbocation is planar \u2014 this is why SN1 leads to racemisation. If the original carbon was a chiral centre, both enantiomers are produced in equal amounts."
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "SN1 \u2014 Step 2: Nucleophilic attack (fast)",
+    type: "Product-forming step",
+    color: c,
+    diagram: /*#__PURE__*/React.createElement(SN1_Step2, null),
+    steps: ["The nucleophile (e.g. HO⁻) uses a lone pair to attack the empty p orbital of the carbocation.", "Attack can occur from either face of the flat carbocation — both are equally accessible.", "This gives a 50:50 mixture of enantiomers (racemic mixture) if the carbon is chiral.", "This step is fast — the carbocation is highly reactive."],
+    note: "Compare SN1 vs SN2: SN1 = 2 steps, tertiary, racemisation, rate doesn't depend on Nu. SN2 = 1 step, primary, inversion, rate depends on Nu."
+  })),
+  elim: c => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(InfoBox, {
+    bg: "rgba(251,146,60,0.06)",
+    border: "rgba(251,146,60,0.2)"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#fed7aa"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Key idea:")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#fed7aa"
+    }
+  }, " Elimination competes with nucleophilic substitution. Use KOH in ETHANOL (not water) and HEAT to favour elimination. The base removes an H from the adjacent carbon, while the C\u2013X bond breaks, and a C=C forms \u2014 all simultaneously (E2).")), /*#__PURE__*/React.createElement(MCard, {
+    title: "Elimination (E2) \u2014 KOH/ethanol",
+    type: "E2 bimolecular elimination",
+    color: c,
+    reagents: "KOH",
+    conditions: "Ethanol solvent, heat \u2014 key! (aqueous KOH gives substitution instead)",
+    obs: "Alkene formed (test with bromine water \u2014 decolourises)",
+    diagram: /*#__PURE__*/React.createElement(Elim_Diag, null),
+    steps: ["KOH/ethanol: OH⁻ acts as a BASE (not a nucleophile). It abstracts an H from the β-carbon (adjacent to the C–X carbon).", "Three bond changes happen simultaneously: C–H breaks, C=C double bond forms, C–Br breaks.", "The H and Br are removed from adjacent carbons (anti-periplanar arrangement preferred).", "Products: alkene + water + Br⁻ (or other halide).", "If there are two possible alkenes (different β-Hs), the more substituted alkene is the major product (Zaitsev's rule)."],
+    note: "The choice: KOH/ethanol/heat \u2192 elimination (alkene). NaOH/water/heat \u2192 substitution (alcohol). This is a classic exam question \u2014 the solvent and temperature make all the difference."
+  })),
+  carb: c => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(InfoBox, {
+    bg: "rgba(192,132,252,0.06)",
+    border: "rgba(192,132,252,0.2)"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#e9d5ff"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Key idea:")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#e9d5ff"
+    }
+  }, " The C=O carbonyl is polarised (C is \u03B4+, O is \u03B4\u2212). Nucleophiles attack the \u03B4+ carbon. The \u03C0 bond breaks, electrons move to the electronegative O, forming an alkoxide intermediate which then gets protonated.")), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "HCN Addition (Nucleophilic Addition)",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Aldehyde/Ketone + HCN \u2192 Hydroxynitrile",
+    type: "Nucleophilic addition",
+    color: c,
+    reagents: "HCN (or NaCN + HCl)",
+    conditions: "Room temperature, KCN catalyst (provides CN\u207B)",
+    diagram: /*#__PURE__*/React.createElement(HCN_Add, null),
+    steps: ["CN⁻ (cyanide ion) is the nucleophile — it uses a lone pair on C to attack the δ+ carbonyl carbon.", "The C=O π bond breaks: both electrons move to O, forming an alkoxide (O⁻) intermediate.", "The O⁻ intermediate is protonated by HCN (or water): O⁻ + HCN → OH + CN⁻. Note: CN⁻ is regenerated — it's a catalyst.", "Product: a hydroxynitrile (also called a cyanohydrin). The molecule has a new C–C bond and a new C–N bond."],
+    note: "Increasing carbon chain by 1 (nitrile can be hydrolysed to carboxylic acid or reduced to amine). Important for synthesis questions. Aldehydes react faster than ketones (less steric hindrance, more \u03B4+).",
+    obs: "Colourless liquid product. Test: prussian blue or silver mirror? No \u2014 use bromine water to check if C=O is gone."
+  }), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "NaBH\u2084 Reduction",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Carbonyl + NaBH\u2084 \u2192 Alcohol",
+    type: "Nucleophilic addition (reduction)",
+    color: c,
+    reagents: "NaBH\u2084 (sodium borohydride)",
+    conditions: "Aqueous ethanol, room temperature",
+    obs: "Colourless liquid product. Fehling's/Tollens' reaction ceases if aldehyde was present.",
+    diagram: /*#__PURE__*/React.createElement(NaBH4_Add, null),
+    steps: ["NaBH₄ provides H⁻ (hydride ion) — this is the nucleophile. H⁻ is a 2-electron donor.", "H⁻ attacks the δ+ carbonyl carbon using its pair of electrons.", "The C=O π bond breaks: electrons move to O, forming alkoxide (O⁻).", "Water protonates the O⁻ to give –OH. Product: primary alcohol (from aldehyde) or secondary alcohol (from ketone)."],
+    note: "Reduction: C gains H (or loses O). NaBH\u2084 is a mild reducing agent \u2014 it reduces C=O but NOT C=C. LiAlH\u2084 is stronger (reduces esters, carboxylic acids too) but not required for AQA."
+  })),
+  benz: c => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(InfoBox, {
+    bg: "rgba(248,113,113,0.06)",
+    border: "rgba(248,113,113,0.2)"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#fecaca"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Key idea:")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#fecaca"
+    }
+  }, " Benzene undergoes SUBSTITUTION not addition \u2014 to preserve the stable delocalised ring. An electrophile is generated (often by a Lewis acid catalyst like AlCl\u2083), it attacks the ring forming an arenium ion (\u03C3-complex), then H\u207A is lost to restore aromaticity.")), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "Nitration",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Benzene + Conc HNO\u2083/H\u2082SO\u2084 \u2192 Nitrobenzene",
+    type: "Electrophilic aromatic substitution",
+    color: c,
+    reagents: "Conc HNO\u2083 + conc H\u2082SO\u2084",
+    conditions: "50\xB0C (above 55\xB0C gets dinitration)",
+    obs: "Pale yellow oily liquid (nitrobenzene) with a sweet/almond smell. Brown fumes if overheated.",
+    diagram: /*#__PURE__*/React.createElement(Benz_Nitration, null),
+    steps: ["H₂SO₄ protonates HNO₃, then water leaves to form the nitronium ion: NO₂⁺. This is the electrophile.", "NO₂⁺ attacks the delocalised π system of benzene — one C–C π bond attacks the electrophile.", "An arenium ion (σ-complex / Wheland intermediate) forms — the ring is no longer aromatic (one sp³ carbon).", "A base (HSO₄⁻) removes an H⁺ from the sp³ carbon to restore aromaticity.", "Driving force: restoring the stable aromatic system. This is why SUBSTITUTION not ADDITION occurs."],
+    note: "Temperature control is critical \u2014 50\xB0C gives mono-nitration. Higher temperatures give di/tri-nitration (explosive TNT analogue). Keep below 55\xB0C."
+  }), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "Friedel-Crafts (Halogenation)",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Benzene + Cl\u2082/AlCl\u2083 \u2192 Chlorobenzene",
+    type: "Electrophilic aromatic substitution",
+    color: c,
+    reagents: "Cl\u2082 + AlCl\u2083 (or FeBr\u2083 for bromination)",
+    conditions: "Room temperature, anhydrous (no water \u2014 AlCl\u2083 is moisture-sensitive)",
+    obs: "White fumes of HCl. Colourless chlorobenzene product.",
+    diagram: /*#__PURE__*/React.createElement(Benz_Halogen, null),
+    steps: ["AlCl₃ is a Lewis acid — it accepts an electron pair from Cl₂, polarising/breaking the Cl–Cl bond to generate Cl⁺ (or Cl–AlCl₄⁻ complex acting as Cl⁺ donor).", "Cl⁺ (the electrophile) attacks the benzene ring π system — forms arenium ion.", "AlCl₄⁻ acts as a base, removing H⁺ from the arenium ion.", "Aromaticity is restored → chlorobenzene + HCl + AlCl₃ (catalyst regenerated)."],
+    note: "AlCl\u2083 acts as a catalyst \u2014 it is regenerated. FeBr\u2083 works the same way for bromination. Without a Lewis acid catalyst, Cl\u2082 does NOT react with benzene under normal conditions (ring is not nucleophilic enough to polarise Cl\u2082 on its own)."
+  })),
+  acyl: c => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(InfoBox, {
+    bg: "rgba(103,232,249,0.06)",
+    border: "rgba(103,232,249,0.2)"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#cffafe"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Key idea:")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#cffafe"
+    }
+  }, " Acyl chlorides (RCOCl) react via nucleophilic addition\u2013elimination. The nucleophile adds to the C=O (like carbonyl), but then Cl\u207B is eliminated to restore C=O. These reactions are fast and vigorous \u2014 no catalyst needed (unlike esters).")), /*#__PURE__*/React.createElement(MCard, {
+    title: "Acyl Chloride + H\u2082O \u2192 Carboxylic Acid",
+    type: "Nucleophilic addition\u2013elimination",
+    color: c,
+    reagents: "RCOCl + water",
+    conditions: "Room temperature (vigorous reaction)",
+    obs: "Steamy white fumes of HCl. Heat evolved.",
+    diagram: /*#__PURE__*/React.createElement(Acyl_H2O, null),
+    steps: ["H₂O lone pair attacks the δ+ acyl carbon (addition step).", "C=O π bond breaks temporarily — O⁻ forms on the carbonyl oxygen (tetrahedral intermediate).", "The tetrahedral intermediate collapses: C=O reforms, Cl⁻ is expelled as the leaving group (elimination).", "An H⁺ is lost from the –OH₂⁺ group → carboxylic acid + HCl."],
+    note: "Acyl chlorides react much faster than esters with nucleophiles because Cl\u207B is a better leaving group than RO\u207B. This makes acylation reactions highly useful in synthesis."
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Acyl Chloride + NH\u2083 \u2192 Amide",
+    type: "Nucleophilic addition\u2013elimination",
+    color: c,
+    reagents: "RCOCl + excess NH\u2083",
+    conditions: "Room temperature (must use excess NH\u2083)",
+    obs: "White fumes/solid of NH\u2084Cl form. The amide is a white solid.",
+    diagram: /*#__PURE__*/React.createElement(Acyl_NH3, null),
+    steps: ["NH₃ lone pair on N attacks the δ+ acyl carbon.", "Tetrahedral intermediate forms (C=O breaks, N–C bond forms).", "Cl⁻ expelled, C=O re-forms — primary amide (RCONH₂) initially formed with NH₄⁺ and Cl⁻.", "Excess NH₃ neutralises the HCl produced (NH₃ + HCl → NH₄Cl), otherwise the acid would destroy the product."],
+    note: "With a primary amine (RNH\u2082), you get a secondary amide (RCONHR). Same mechanism \u2014 the N lone pair attacks.",
+    extra: /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 12,
+        background: "rgba(255,255,255,0.03)",
+        borderRadius: 6,
+        padding: "10px 14px",
+        fontSize: "0.8em",
+        color: "#cbd5e1"
+      }
+    }, /*#__PURE__*/React.createElement("b", {
+      style: {
+        color: c
+      }
+    }, "Summary of acyl chloride reactions:"), /*#__PURE__*/React.createElement("table", {
+      style: {
+        width: "100%",
+        borderCollapse: "collapse",
+        marginTop: 6,
+        fontSize: "0.85em"
+      }
+    }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", {
+      style: {
+        borderBottom: "1px solid rgba(255,255,255,0.1)"
+      }
+    }, ["Nucleophile", "Reagent", "Product"].map(h => /*#__PURE__*/React.createElement("th", {
+      key: h,
+      style: {
+        padding: "5px 8px",
+        textAlign: "left",
+        color: c
+      }
+    }, h)))), /*#__PURE__*/React.createElement("tbody", null, [["H₂O", "Water", "Carboxylic acid (RCOOH) + HCl"], ["ROH", "Alcohol", "Ester (RCOOR') + HCl"], ["NH₃", "Excess ammonia", "Primary amide (RCONH₂) + NH₄Cl"], ["RNH₂", "Primary amine", "Secondary amide (RCONHR') + RNH₃Cl"]].map(([a, b, cc]) => /*#__PURE__*/React.createElement("tr", {
+      key: a,
+      style: {
+        borderBottom: "1px solid rgba(255,255,255,0.05)"
+      }
+    }, /*#__PURE__*/React.createElement("td", {
+      style: {
+        padding: "5px 8px",
+        fontFamily: "monospace"
+      }
+    }, a), /*#__PURE__*/React.createElement("td", {
+      style: {
+        padding: "5px 8px"
+      }
+    }, b), /*#__PURE__*/React.createElement("td", {
+      style: {
+        padding: "5px 8px"
+      }
+    }, cc))))))
+  })),
+  ester: c => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(InfoBox, {
+    bg: "rgba(167,139,250,0.06)",
+    border: "rgba(167,139,250,0.2)"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#ddd6fe"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Key idea:")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#ddd6fe"
+    }
+  }, " Esterification is the reverse of hydrolysis \u2014 both reactions are reversible. Acid hydrolysis is reversible; base hydrolysis (saponification) is irreversible because carboxylate (RCOO\u207B) doesn't react back with the alcohol.")), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "Ester Formation",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Carboxylic acid + Alcohol \u2192 Ester",
+    type: "Fischer esterification (reversible)",
+    color: c,
+    reagents: "Carboxylic acid + alcohol",
+    conditions: "Conc H\u2082SO\u2084 catalyst, heat, reflux",
+    obs: "Sweet-smelling ester layer. Equilibrium \u2014 yield never 100%.",
+    diagram: /*#__PURE__*/React.createElement(Ester_Form, null),
+    steps: ["H⁺ (from H₂SO₄) protonates the carbonyl oxygen → makes C more electrophilic (δ+ increases).", "The alcohol OH lone pair attacks the activated carbonyl C (nucleophilic addition).", "A tetrahedral intermediate forms with two OH groups.", "One OH group is protonated and lost as water (elimination step).", "H⁺ leaves from the remaining O — ester product + H₂O."],
+    note: "Equilibrium \u2014 use excess of one reactant (usually alcohol) or remove water continuously to drive forward. Conc H\u2082SO\u2084 is a catalyst AND a drying agent."
+  }), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "Ester Hydrolysis",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "Ester + H\u2082O/NaOH \u2192 acid/alcohol",
+    type: "Nucleophilic addition\u2013elimination (hydrolysis)",
+    color: c,
+    reagents: "(a) Dilute H\u2082SO\u2084 or HCl + water,  (b) NaOH (aq)",
+    conditions: "Heat, reflux",
+    diagram: /*#__PURE__*/React.createElement(Ester_Hydrolysis, null),
+    steps: ["ACID hydrolysis: H⁺ activates the C=O. Water acts as nucleophile, attacks C. Tetrahedral intermediate collapses, alcohol leaves. Gives carboxylic acid + alcohol. REVERSIBLE.", "BASE hydrolysis (saponification): OH⁻ directly attacks the carbonyl C. Tetrahedral intermediate forms. Alcohol departs as leaving group. Product is CARBOXYLATE ion (RCOO⁻) — this cannot reverse with the alcohol (different energetics). IRREVERSIBLE.", "Base hydrolysis goes to completion — equilibrium lies fully to the right because RCOO⁻ is a stable anion."],
+    note: "Saponification is used in soap-making: fat (glycerol ester) + NaOH \u2192 glycerol + sodium salt of fatty acid (soap). The sodium carboxylate salt is the soap."
+  })),
+  amines: c => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(InfoBox, {
+    bg: "rgba(52,211,153,0.06)",
+    border: "rgba(52,211,153,0.2)"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#a7f3d0"
+    }
+  }, /*#__PURE__*/React.createElement("b", null, "Key idea:")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#a7f3d0"
+    }
+  }, " Amines are bases AND nucleophiles \u2014 both because of the lone pair on N. As bases they accept H\u207A. As nucleophiles they attack electrophilic carbons. Aryl amines (like aniline) are weaker bases because the lone pair is delocalised into the benzene ring.")), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "Amines as Bases",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "R-NH\u2082 + H\u2082O \u21CC RNH\u2083\u207A + OH\u207B",
+    type: "Br\xF8nsted-Lowry base",
+    color: c,
+    diagram: /*#__PURE__*/React.createElement(Amine_Basic, null),
+    steps: ["The lone pair on N accepts a proton (H⁺) from water — this is the definition of a Brønsted-Lowry base.", "Equilibrium lies to the LEFT (amines are WEAK bases) — only partial protonation.", "Alkyl amines (CH₃NH₂) are stronger bases than NH₃ — alkyl groups donate electron density to N, making LP more available.", "Aryl amines (PhNH₂, aniline) are weaker bases than NH₃ — LP is delocalised into the aromatic ring, less available."],
+    note: "Basicity order: aryl amine < NH\u2083 < primary alkyl amine < secondary alkyl amine. With HCl: amine + HCl \u2192 ammonium salt (R-NH\u2083\u207ACl\u207B). These salts are white solids, soluble in water."
+  }), /*#__PURE__*/React.createElement(SectionHead, {
+    t: "Amines as Nucleophiles",
+    c: c
+  }), /*#__PURE__*/React.createElement(MCard, {
+    title: "R-NH\u2082 + RX \u2192 alkylammonium salt \u2192 amine",
+    type: "Nucleophilic substitution",
+    color: c,
+    reagents: "Excess halogenoalkane",
+    conditions: "Heat, ethanol solvent",
+    diagram: /*#__PURE__*/React.createElement(Amine_NuSub, null),
+    steps: ["N lone pair attacks the δ+ carbon of the halogenoalkane (SN2 mechanism).", "A secondary ammonium salt forms first (R₂NH₂⁺X⁻).", "Further NH₃ (or more amine) deprotonates the salt → secondary amine R₂NH.", "Problem: the secondary amine can react again (it also has a lone pair!) → tertiary amine, then quaternary ammonium salt.", "You get a MIXTURE of products — this is the main disadvantage. Use excess NH₃ to get mostly primary amine."],
+    note: "To make a specific amine cleanly, use the Gabriel synthesis or reduce a nitrile/amide instead.",
+    extra: /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 12,
+        background: "rgba(255,255,255,0.03)",
+        borderRadius: 6,
+        padding: "10px 14px",
+        fontSize: "0.8em",
+        color: "#cbd5e1"
+      }
+    }, /*#__PURE__*/React.createElement("b", {
+      style: {
+        color: c
+      }
+    }, "Ways to make amines (AQA):"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 6,
+        display: "flex",
+        flexDirection: "column",
+        gap: 5
+      }
+    }, [["Nitrile + LiAlH₄", "→ primary amine (RCH₂NH₂)", "2 step from halogenoalkane"], ["Nitrobenzene + Sn/conc HCl then NaOH", "→ aniline (aryl amine)", "reduction of arene"], ["Halogenoalkane + excess NH₃", "→ mixture of amines", "alkylation (messy)"], ["Amide + LiAlH₄", "→ amine", "reduction of amide"]].map(([a, b, c]) => /*#__PURE__*/React.createElement("div", {
+      key: a,
+      style: {
+        display: "flex",
+        gap: 6,
+        flexWrap: "wrap"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "monospace",
+        color: "#e2e8f0"
+      }
+    }, a), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: "#4ade80"
+      }
+    }, b), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: "#64748b"
+      }
+    }, "(", c, ")")))))
+  }))
+};
+
+// ─── App ───────────────────────────────────────────────────────────────────
+function App() {
+  const [active, setActive] = useState("frs");
+  const topic = topics.find(t => t.id === active);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: "#0b0f18",
+      color: "#e2e8f0",
+      fontFamily: "'Georgia','Times New Roman',serif"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "linear-gradient(135deg,#0f172a 0%,#1a0c2e 100%)",
+      borderBottom: "1px solid rgba(255,255,255,0.08)",
+      padding: "22px 24px 18px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.72em",
+      color: "#64748b",
+      letterSpacing: "0.15em",
+      textTransform: "uppercase",
+      marginBottom: 5
+    }
+  }, "AQA A-Level Chemistry"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      margin: 0,
+      fontSize: "1.65em",
+      fontWeight: 700,
+      color: "#f8fafc",
+      letterSpacing: "-0.01em"
+    }
+  }, "Organic Mechanisms \u2014 Complete Guide"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "#94a3b8",
+      fontSize: "0.83em",
+      marginTop: 5
+    }
+  }, "Curly arrows \xB7 Lone pairs \xB7 Intermediates \xB7 Reagents & Conditions")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      overflowX: "auto",
+      borderBottom: "1px solid rgba(255,255,255,0.08)",
+      background: "#0d1117",
+      padding: "0 10px",
+      scrollbarWidth: "none",
+      gap: 2
+    }
+  }, topics.map(t => /*#__PURE__*/React.createElement("button", {
+    key: t.id,
+    onClick: () => setActive(t.id),
+    style: {
+      background: active === t.id ? t.dark : "transparent",
+      border: "none",
+      borderBottom: active === t.id ? `2px solid ${t.color}` : "2px solid transparent",
+      color: active === t.id ? t.color : "#64748b",
+      padding: "11px 13px",
+      cursor: "pointer",
+      fontFamily: "inherit",
+      fontSize: "0.8em",
+      fontWeight: active === t.id ? 700 : 500,
+      whiteSpace: "nowrap",
+      transition: "all 0.15s"
+    }
+  }, t.emoji, " ", t.label))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 880,
+      margin: "0 auto",
+      padding: "26px 18px 70px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      marginBottom: 22
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 4,
+      height: 30,
+      background: topic.color,
+      borderRadius: 2
+    }
+  }), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      margin: 0,
+      fontSize: "1.35em",
+      fontWeight: 700,
+      color: "#f8fafc"
+    }
+  }, topic.emoji, " ", topic.label)), content[active]?.(topic.color)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderTop: "1px solid rgba(255,255,255,0.07)",
+      padding: "14px 22px",
+      background: "#0d1117",
+      display: "flex",
+      gap: 18,
+      flexWrap: "wrap",
+      fontSize: "0.78em"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#94a3b8"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#fb923c",
+      fontWeight: 700
+    }
+  }, "\u25B6 Orange curly arrow"), " = heterolytic electron movement (pair)"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#94a3b8"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#facc15",
+      fontWeight: 700
+    }
+  }, "\u25B7 Yellow fishhook"), " = homolytic (single electron, radical)"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#94a3b8"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#60a5fa",
+      fontWeight: 700
+    }
+  }, "\u25CF\u25CF Blue dots"), " = lone pair"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#94a3b8"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#fde68a",
+      fontWeight: 700
+    }
+  }, "\u03B4+/\u03B4\u2212"), " = partial charges (polarisation)"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#94a3b8"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#c084fc",
+      fontWeight: 700
+    }
+  }, "Purple"), " = halogens"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#94a3b8"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#f87171",
+      fontWeight: 700
+    }
+  }, "Red"), " = oxygen"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#94a3b8"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#60a5fa",
+      fontWeight: 700
+    }
+  }, "Blue"), " = nitrogen")));
+}
+
+    // Mount the app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
+</body>
+</html>
