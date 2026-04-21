@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AQA Organic Mechanisms — Complete Guide</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0b0f18; color: #e2e8f0; font-family: 'Georgia','Times New Roman',serif; }
+    ::-webkit-scrollbar { height: 4px; width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+// ─── Topics ────────────────────────────────────────────────────────────────
+const topics = [
+  { id:"frs",   label:"Free Radical Sub.",       emoji:"⚡", color:"#facc15", dark:"#1a1000" },
+  { id:"ea",    label:"Electrophilic Addition",  emoji:"⚗", color:"#4ade80", dark:"#022c16" },
+  { id:"sn2",   label:"SN2 Mechanism",           emoji:"🔄", color:"#60a5fa", dark:"#071526" },
+  { id:"sn1",   label:"SN1 Mechanism",           emoji:"💥", color:"#a78bfa", dark:"#13082a" },
+  { id:"elim",  label:"Elimination",             emoji:"↗", color:"#fb923c", dark:"#1c0800" },
+  { id:"carb",  label:"Carbonyl – Nucl. Add.",   emoji:"🧪", color:"#c084fc", dark:"#150a2a" },
+  { id:"benz",  label:"Benzene EAS",             emoji:"⬡", color:"#f87171", dark:"#1c0303" },
+  { id:"acyl",  label:"Acyl Chlorides",          emoji:"🔬", color:"#67e8f9", dark:"#031418" },
+  { id:"ester", label:"Esters & Hydrolysis",     emoji:"🔗", color:"#a78bfa", dark:"#10082a" },
+  { id:"amines",label:"Amines",                  emoji:"💠", color:"#34d399", dark:"#022018" },
+];
+
+function hexRgb(h) {
+  const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);
+  return r ? `${parseInt(r[1],16)},${parseInt(r[2],16)},${parseInt(r[3],16)}` : "255,255,255";
+}
+
+// ─── SVG Primitives ────────────────────────────────────────────────────────
+const DEFS = () => (
+  <defs>
+    {/* orange – heterolytic curly arrow */}
+    <marker id="oa" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#fb923c"/>
+    </marker>
+    {/* yellow – homolytic fishhook */}
+    <marker id="ya" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
+      <polygon points="0 0, 6 2.5, 0 5" fill="#facc15"/>
+    </marker>
+    {/* green curly arrow */}
+    <marker id="ga" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4ade80"/>
+    </marker>
+    {/* grey reaction arrow */}
+    <marker id="wa" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+    {/* blue curly arrow */}
+    <marker id="ba" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#60a5fa"/>
+    </marker>
+  </defs>
+);
+
+// Electron-movement arrows
+const OA = ({d}) => <path d={d} stroke="#fb923c" fill="none" strokeWidth="2.2" markerEnd="url(#oa)"/>;
+const YA = ({d}) => <path d={d} stroke="#facc15" fill="none" strokeWidth="2"   markerEnd="url(#ya)"/>;
+const GA = ({d}) => <path d={d} stroke="#4ade80" fill="none" strokeWidth="2.2" markerEnd="url(#ga)"/>;
+const BA = ({d}) => <path d={d} stroke="#60a5fa" fill="none" strokeWidth="2.2" markerEnd="url(#ba)"/>;
+
+// Straight reaction arrow
+const RA = ({x1,y1,x2,y2,above="",below=""}) => (
+  <g>
+    <line x1={x1} y1={y1} x2={x2-10} y2={y2} stroke="#64748b" strokeWidth="1.5"/>
+    <polygon points={`${x2},${y2} ${x2-10},${y2-4} ${x2-10},${y2+4}`} fill="#64748b"/>
+    {above && <text x={(x1+x2)/2} y={y1-8}  fill="#94a3b8" fontSize="9" fontFamily="Georgia,serif" textAnchor="middle" fontStyle="italic">{above}</text>}
+    {below && <text x={(x1+x2)/2} y={y2+20} fill="#94a3b8" fontSize="9" fontFamily="Georgia,serif" textAnchor="middle" fontStyle="italic">{below}</text>}
+  </g>
+);
+
+// Equilibrium arrows (double-headed)
+const EA = ({x1,y,x2}) => (
+  <g>
+    <line x1={x1} y1={y-3} x2={x2-8} y2={y-3} stroke="#64748b" strokeWidth="1.4"/>
+    <polygon points={`${x2},${y-3} ${x2-8},${y-6} ${x2-8},${y}`}    fill="#64748b"/>
+    <line x1={x2} y1={y+3} x2={x1+8} y2={y+3} stroke="#64748b" strokeWidth="1.4"/>
+    <polygon points={`${x1},${y+3} ${x1+8},${y} ${x1+8},${y+6}`}    fill="#64748b"/>
+  </g>
+);
+
+// Atom label
+const T = ({x,y,t,c="#e2e8f0",s=14,b=true}) =>
+  <text x={x} y={y} fill={c} fontSize={s} fontFamily="'Courier New',monospace"
+        fontWeight={b?"700":"400"} textAnchor="middle" dominantBaseline="middle">{t}</text>;
+
+// Bond
+const BD = ({x1,y1,x2,y2,dash=false,n=1}) => {
+  const dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy)||1;
+  const px=-dy/len*2.8, py=dx/len*2.8;
+  return <g opacity={dash?0.5:0.85}>
+    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#94a3b8" strokeWidth="1.8" strokeDasharray={dash?"5,3":"none"}/>
+    {n>=2 && <line x1={x1+px} y1={y1+py} x2={x2+px} y2={y2+py} stroke="#94a3b8" strokeWidth="1.8"/>}
+    {n>=3 && <line x1={x1-px} y1={y1-py} x2={x2-px} y2={y2-py} stroke="#94a3b8" strokeWidth="1.8"/>}
+  </g>;
+};
+
+// Lone pair (two blue dots at angle from atom centre)
+const LP = ({x,y,angle=90}) => {
+  const r=8, a1=(angle-20)*Math.PI/180, a2=(angle+20)*Math.PI/180;
+  return <>
+    <circle cx={x+r*Math.cos(a1)} cy={y-r*Math.sin(a1)} r="2.3" fill="#60a5fa"/>
+    <circle cx={x+r*Math.cos(a2)} cy={y-r*Math.sin(a2)} r="2.3" fill="#60a5fa"/>
+  </>;
+};
+
+// Radical dot
+const RD = ({x,y}) => <circle cx={x} cy={y} r="3" fill="#facc15"/>;
+
+// Charges / labels
+const Ch  = ({x,y,t,c="#fca5a5"}) => <text x={x} y={y} fill={c} fontSize="12" fontFamily="monospace">{t}</text>;
+const Dl  = ({x,y,t})              => <text x={x} y={y} fill="#fde68a" fontSize="10" fontFamily="monospace">δ{t}</text>;
+const Lbl = ({x,y,t,c="#64748b"}) => <text x={x} y={y} fill={c} fontSize="10" fontFamily="Georgia,serif" fontStyle="italic" textAnchor="middle">{t}</text>;
+const HdrLbl = ({x,y,t,c}) => <text x={x} y={y} fill={c} fontSize="11" fontFamily="Georgia,serif" fontWeight="600" textAnchor="middle">{t}</text>;
+
+// SVG wrapper
+const MS = ({w=540,h=155,children}) => (
+  <svg viewBox={`0 0 ${w} ${h}`} width="100%" style={{maxWidth:w,display:"block",margin:"10px auto",overflow:"visible"}}>
+    <DEFS/>{children}
+  </svg>
+);
+
+// Transition-state / intermediate brackets
+const BRK = ({x,y,w,h}) => (
+  <g stroke="#64748b" strokeWidth="1.5" fill="none" opacity="0.65">
+    <path d={`M${x+5},${y} L${x},${y} L${x},${y+h} L${x+5},${y+h}`}/>
+    <path d={`M${x+w-5},${y} L${x+w},${y} L${x+w},${y+h} L${x+w-5},${y+h}`}/>
+  </g>
+);
+
+// Benzene ring (hexagon at cx,cy with radius r)
+const Benzene = ({cx,cy,r=28,c="#94a3b8"}) => {
+  const pts = Array.from({length:6},(_,i)=>{
+    const a=(i*60-30)*Math.PI/180;
+    return `${cx+r*Math.cos(a)},${cy+r*Math.sin(a)}`;
+  }).join(" ");
+  return <>
+    <polygon points={pts} fill="none" stroke={c} strokeWidth="1.8"/>
+    <circle cx={cx} cy={cy} r={r*0.55} fill="none" stroke={c} strokeWidth="1.8"/>
+  </>;
+};
+
+// ─── UI Components ─────────────────────────────────────────────────────────
+const InfoBox = ({bg,border,children}) => (
+  <div style={{background:bg,border:`1px solid ${border}`,borderRadius:8,padding:"10px 14px",marginBottom:14,fontSize:"0.85em",lineHeight:1.6}}>
+    {children}
+  </div>
+);
+
+const ReagBox = ({reagents,conditions,color}) => (
+  <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:10}}>
+    {reagents  && <span style={{background:"rgba(255,255,255,0.05)",padding:"3px 10px",borderRadius:6,fontSize:"0.79em",color:"#cbd5e1"}}><b style={{color:"#94a3b8"}}>Reagents: </b>{reagents}</span>}
+    {conditions && <span style={{background:"rgba(255,255,255,0.05)",padding:"3px 10px",borderRadius:6,fontSize:"0.79em",color:"#cbd5e1"}}><b style={{color:"#94a3b8"}}>Conditions: </b>{conditions}</span>}
+  </div>
+);
+
+const Steps = ({items,color}) => (
+  <div style={{marginTop:10}}>
+    {items.map((s,i)=>(
+      <div key={i} style={{display:"flex",gap:10,marginBottom:7,alignItems:"flex-start"}}>
+        <span style={{background:`rgba(${hexRgb(color)},0.18)`,color,minWidth:22,height:22,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.75em",fontWeight:700,flexShrink:0}}>{i+1}</span>
+        <span style={{color:"#cbd5e1",fontSize:"0.84em",lineHeight:1.6}}>{s}</span>
+      </div>
+    ))}
+  </div>
+);
+
+const Note   = ({t})  => <div style={{marginTop:10,padding:"8px 12px",background:"rgba(255,255,255,0.03)",borderRadius:6,color:"#94a3b8",fontSize:"0.8em"}}>💡 {t}</div>;
+const OBs    = ({t})  => <div style={{background:"rgba(253,230,138,0.06)",border:"1px solid rgba(253,230,138,0.15)",borderRadius:6,padding:"6px 12px",marginBottom:8,color:"#fde68a",fontSize:"0.8em"}}>👁 <b>Observation:</b> {t}</div>;
+
+const MCard = ({title,type,color,reagents,conditions,diagram,steps,note,obs,extra}) => (
+  <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderLeft:`3px solid ${color}`,borderRadius:8,padding:"16px 18px",marginBottom:20}}>
+    <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8,flexWrap:"wrap"}}>
+      <span style={{fontFamily:"Georgia,serif",fontSize:"1.05em",fontWeight:700,color:"#f1f5f9"}}>{title}</span>
+      {type && <span style={{background:`rgba(${hexRgb(color)},0.13)`,color,padding:"2px 10px",borderRadius:20,fontSize:"0.72em",fontWeight:700}}>{type}</span>}
+    </div>
+    {(reagents||conditions) && <ReagBox reagents={reagents} conditions={conditions} color={color}/>}
+    {obs     && <OBs t={obs}/>}
+    {diagram}
+    {steps   && <Steps items={steps} color={color}/>}
+    {note    && <Note t={note}/>}
+    {extra}
+  </div>
+);
+
+const SectionHead = ({t,c}) => (
+  <h3 style={{color:c,fontFamily:"Georgia,serif",fontSize:"1.05em",fontWeight:700,marginBottom:12,paddingBottom:6,borderBottom:"1px solid rgba(255,255,255,0.08)"}}>
+    {t}
+  </h3>
+);
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  MECHANISM DIAGRAMS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── FRS ───────────────────────────────────────────────────────────────────
+const FRS_Init = () => (
+  <MS w={440} h={130}>
+    <T x={80}  y={65} t="Cl" c="#4ade80"/>
+    <BD x1={95}  y1={65} x2={128} y2={65}/>
+    <T x={143} y={65} t="Cl" c="#4ade80"/>
+    {/* homolytic fishhook arrows - one electron each way */}
+    <YA d="M 108,58 Q 92,38 74,55"/>
+    <YA d="M 117,58 Q 133,38 150,55"/>
+    <RA x1={168} y1={65} x2={210} y2={65} above="UV light"/>
+    <T x={238} y={65} t="Cl•" c="#facc15"/>
+    <T x={280} y={57} t="+" c="#64748b" s={16}/>
+    <T x={320} y={65} t="•Cl" c="#facc15"/>
+    <Lbl x={220} y={108} t="homolytic fission — each atom keeps one electron"/>
+    <HdrLbl x={110} y={108} t="Cl₂ only" c="#64748b"/>
+  </MS>
+);
+
+const FRS_Prop = () => (
+  <MS w={520} h={145}>
+    {/* STEP 1: CH4 + Cl• → •CH3 + HCl */}
+    <HdrLbl x={100} y={20} t="Propagation 1" c="#facc15"/>
+    <T x={45}  y={65} t="CH₄" c="#e2e8f0"/>
+    <T x={88}  y={57} t="+" c="#64748b" s={15}/>
+    <RD x={118} y={65}/>
+    <T x={130} y={65} t="Cl•" c="#facc15"/>
+    <YA d="M 62,57 Q 95,32 118,58"/>
+    <YA d="M 140,58 Q 152,38 160,52"/>
+    <RA x1={155} y1={65} x2={192} y2={65}/>
+    <RD x={210} y={65}/>
+    <T x={222} y={65} t="CH₃•" c="#facc15"/>
+    <T x={270} y={57} t="+" c="#64748b" s={15}/>
+    <T x={300} y={65} t="HCl" c="#e2e8f0"/>
+    {/* STEP 2: •CH3 + Cl2 → CH3Cl + Cl• */}
+    <HdrLbl x={100} y={118} t="Propagation 2" c="#facc15"/>
+    <RD x={30}  y={130}/>
+    <T x={55}  y={130} t="CH₃•" c="#facc15"/>
+    <T x={100} y={122} t="+" c="#64748b" s={15}/>
+    <T x={135} y={130} t="Cl" c="#4ade80"/>
+    <BD x1={148} y1={130} x2={174} y2={130}/>
+    <T x={185} y={130} t="Cl" c="#4ade80"/>
+    <YA d="M 72,123 Q 112,102 140,122"/>
+    <YA d="M 158,122 Q 168,108 180,118"/>
+    <RA x1={200} y1={130} x2={235} y2={130}/>
+    <T x={270} y={130} t="CH₃Cl" c="#e2e8f0"/>
+    <T x={320} y={122} t="+" c="#64748b" s={15}/>
+    <RD x={345} y={130}/>
+    <T x={360} y={130} t="Cl•" c="#facc15"/>
+  </MS>
+);
+
+const FRS_Term = () => (
+  <MS w={480} h={105}>
+    <HdrLbl x={240} y={15} t="Any two radicals combine — no new chain carriers formed" c="#64748b"/>
+    <T x={55}  y={50} t="Cl• + •Cl  →  Cl₂"     c="#94a3b8" s={12}/>
+    <T x={55}  y={72} t="CH₃• + •Cl  →  CH₃Cl"  c="#94a3b8" s={12}/>
+    <T x={55}  y={94} t="CH₃• + •CH₃  →  C₂H₆"  c="#94a3b8" s={12}/>
+    <Lbl x={380} y={50}  t="Cl₂ reformed"/>
+    <Lbl x={380} y={72}  t="useful product"/>
+    <Lbl x={380} y={94}  t="unwanted side product"/>
+  </MS>
+);
+
+// ── Electrophilic Addition ────────────────────────────────────────────────
+const EA_Br2_Step1 = () => (
+  <MS w={520} h={160}>
+    {/* alkene C=C */}
+    <T x={70}  y={80} t="C" c="#e2e8f0"/>
+    <BD x1={82} y1={80} x2={115} y2={80} n={2}/>
+    <T x={127} y={80} t="C" c="#e2e8f0"/>
+    <T x={58}  y={62} t="H₂" c="#64748b" s={11}/>
+    <T x={139} y={62} t="H₂" c="#64748b" s={11}/>
+    {/* Br-Br */}
+    <T x={190} y={80} t="Br" c="#c084fc"/>
+    <BD x1={204} y1={80} x2={224} y2={80}/>
+    <T x={238} y={80} t="Br" c="#c084fc"/>
+    {/* partial charges on Br-Br */}
+    <Dl x={185} y={66} t="δ+"/>
+    <Dl x={236} y={66} t="δ−"/>
+    {/* LP on right Br */}
+    <LP x={250} y={80} angle={0}/>
+    <LP x={238} y={66} angle={90}/>
+    {/* curly arrow: π bond → Br (near) */}
+    <OA d="M 98,70 Q 140,42 182,72"/>
+    {/* curly arrow: Br-Br → far Br */}
+    <OA d="M 215,72 Q 227,52 245,70"/>
+    <RA x1={265} y1={80} x2={300} y2={80}/>
+    {/* bromonium ion */}
+    <BRK x={305} y={52} w={140} h={54}/>
+    <T x={330} y={78} t="C" c="#e2e8f0" s={13}/>
+    <BD x1={340} y1={74} x2={360} y2={65}/>
+    <T x={368} y={62} t="Br" c="#c084fc" s={13}/>
+    <BD x1={340} y1={84} x2={360} y2={93}/>
+    <T x={368} y={96} t="C" c="#e2e8f0" s={13}/>
+    <T x={350} y={80} t="⁺" c="#fca5a5" s={12}/>
+    <Ch x={443} y={68} t="⁺" c="#fca5a5"/>
+    <Lbl x={375} y={120} t="bromonium ion intermediate"/>
+    <Lbl x={100} y={135} t="π electrons attack δ+ Br"/>
+  </MS>
+);
+
+const EA_Br2_Step2 = () => (
+  <MS w={500} h={145}>
+    {/* bromonium + Br- */}
+    <BRK x={20} y={38} w={145} h={55}/>
+    <T x={50}  y={65} t="C" c="#e2e8f0" s={13}/>
+    <BD x1={60} y1={60} x2={82} y2={52}/>
+    <T x={90}  y={48} t="Br" c="#c084fc" s={13}/>
+    <BD x1={60} y1={70} x2={82} y2={80}/>
+    <T x={90}  y={84} t="C" c="#e2e8f0" s={13}/>
+    <T x={72}  y={65} t="⁺" c="#fca5a5" s={11}/>
+    <Ch x={163} y={50} t="⁺"/>
+    <T x={190} y={65} t="+" c="#64748b" s={15}/>
+    <T x={218} y={65} t="Br⁻" c="#c084fc"/>
+    {/* LP on Br- */}
+    <LP x={205} y={65} angle={180}/>
+    <LP x={215} y={52} angle={90}/>
+    {/* curly arrow from Br- lone pair to C (back face) */}
+    <OA d="M 207,57 Q 155,32 105,60"/>
+    <RA x1={248} y1={65} x2={288} y2={65}/>
+    {/* product: 1,2-dibromide (anti addition) */}
+    <T x={315} y={55} t="C" c="#e2e8f0"/>
+    <BD x1={327} y1={55} x2={360} y2={55}/>
+    <T x={372} y={55} t="C" c="#e2e8f0"/>
+    <BD x1={315} y1={65} x2={315} y2={80}/>
+    <T x={315} y={90} t="Br" c="#c084fc" s={12}/>
+    <BD x1={372} y1={65} x2={372} y2={80}/>
+    <T x={372} y={90} t="Br" c="#c084fc" s={12}/>
+    <Lbl x={344} y={125} t="anti addition product (trans)"/>
+    <Lbl x={120} y={120} t="Br⁻ attacks from opposite face → anti addition"/>
+  </MS>
+);
+
+const EA_HBr = () => (
+  <MS w={560} h={170}>
+    {/* C=C + H-Br */}
+    <T x={58}  y={75} t="C" c="#e2e8f0"/>
+    <BD x1={70} y1={75} x2={105} y2={75} n={2}/>
+    <T x={117} y={75} t="C" c="#e2e8f0"/>
+    <T x={45}  y={57} t="H₂" c="#64748b" s={11}/>
+    <T x={129} y={57} t="H" c="#64748b" s={11}/>
+    <BD x1={156} y1={75} x2={188} y2={75}/>
+    <T x={198} y={75} t="H" c="#64748b" s={12}/>
+    <BD x1={198} y1={75} x2={225} y2={75}/>
+    <T x={238} y={75} t="Br" c="#c084fc"/>
+    <Dl x={194} y={60} t="δ+"/>
+    <Dl x={234} y={60} t="δ−"/>
+    {/* π bond attacks H(δ+) */}
+    <OA d="M 90,64 Q 145,35 190,67"/>
+    {/* H-Br bond breaks, Br leaves as Br- */}
+    <OA d="M 215,68 Q 228,50 243,65"/>
+    <RA x1={258} y1={75} x2={295} y2={75}/>
+    {/* secondary carbocation intermediate */}
+    <BRK x={300} y={50} w={100} h={50}/>
+    <T x={323} y={75} t="C" c="#e2e8f0" s={13}/>
+    <BD x1={335} y1={75} x2={358} y2={75}/>
+    <T x={370} y={75} t="C" c="#e2e8f0" s={13}/>
+    <T x={370} y={55} t="H" c="#64748b" s={11}/>
+    <BD x1={370} y1={65} x2={370} y2={60}/>
+    <Ch x={375} y={60} t="⁺"/>
+    <Lbl x={350} y={120} t="carbocation (more stable = more substituted)"/>
+    <RA x1={405} y1={75} x2={442} y2={75}/>
+    {/* Br- attacks */}
+    <T x={460} y={65} t="CH₃" c="#64748b" s={11}/>
+    <T x={480} y={75} t="C" c="#e2e8f0"/>
+    <BD x1={492} y1={75} x2={510} y2={75}/>
+    <T x={522} y={75} t="Br" c="#c084fc" s={12}/>
+    <Lbl x={100} y={148} t="H adds to less substituted carbon (Markovnikov's rule)"/>
+    <Lbl x={470} y={148} t="Br adds to more substituted C"/>
+  </MS>
+);
+
+// ── SN2 ──────────────────────────────────────────────────────────────────
+const SN2_Diag = () => (
+  <MS w={590} h={162}>
+    {/* HO⁻ nucleophile */}
+    <T x={48} y={82} t="HO" c="#4ade80"/>
+    <Ch x={66} y={68} t="⁻"/>
+    {/* lone pairs on O */}
+    <LP x={32} y={82} angle={180}/>
+    <LP x={46} y={67} angle={90}/>
+    {/* curly arrow: LP → C (backside attack) */}
+    <OA d="M 33,74 Q 98,36 152,75"/>
+    {/* C centre */}
+    <T x={168} y={82} t="C" c="#e2e8f0"/>
+    {/* H atoms */}
+    <T x={168} y={59} t="H" c="#64748b" s={11}/>
+    <T x={145} y={96} t="H" c="#64748b" s={11}/>
+    <T x={191} y={96} t="H" c="#64748b" s={11}/>
+    <BD x1={168} y1={70} x2={168} y2={64}/>
+    <BD x1={162} y1={87} x2={153} y2={94}/>
+    <BD x1={174} y1={87} x2={183} y2={94}/>
+    {/* δ+ on C */}
+    <Dl x={176} y={64} t="+"/>
+    {/* C–Br bond */}
+    <BD x1={181} y1={82} x2={232} y2={82}/>
+    {/* curly arrow: C-Br bond → Br */}
+    <OA d="M 207,74 Q 225,52 246,70"/>
+    {/* Br leaving group */}
+    <T x={252} y={82} t="Br" c="#c084fc"/>
+    <LP x={268} y={82} angle={0}/>
+    <LP x={252} y={67} angle={90}/>
+    <Dl x={256} y={66} t="−"/>
+    {/* reaction arrow → TS */}
+    <RA x1={284} y1={82} x2={318} y2={82}/>
+    {/* Transition state */}
+    <BRK x={322} y={55} w={122} h={52}/>
+    <T x={342} y={80} t="HO" c="#4ade80" s={12}/>
+    <BD x1={356} y1={80} x2={366} y2={80} dash={true}/>
+    <T x={376} y={80} t="C" c="#e2e8f0" s={12}/>
+    <BD x1={386} y1={80} x2={396} y2={80} dash={true}/>
+    <T x={408} y={80} t="Br" c="#c084fc" s={12}/>
+    <Ch x={442} y={64} t="⁻"/>
+    <T x={376} y={97} t="‡" c="#64748b" s={11}/>
+    {/* → products */}
+    <RA x1={449} y1={82} x2={483} y2={82}/>
+    <T x={510} y={72} t="HOCH₃" c="#4ade80" s={12}/>
+    <T x={510} y={90} t="+ Br⁻" c="#c084fc" s={12}/>
+    {/* labels */}
+    <Lbl x={100} y={140} t="backside attack — 180° to leaving group"/>
+    <Lbl x={383} y={140} t="transition state (one step — concerted)"/>
+    <Lbl x={510} y={140} t="Walden inversion"/>
+  </MS>
+);
+
+// ── SN1 ──────────────────────────────────────────────────────────────────
+const SN1_Step1 = () => (
+  <MS w={500} h={140}>
+    {/* tertiary halogenoalkane */}
+    <T x={38} y={72} t="(CH₃)₃C" c="#e2e8f0"/>
+    <BD x1={82} y1={72} x2={112} y2={72}/>
+    <T x={125} y={72} t="Br" c="#c084fc"/>
+    <LP x={140} y={72} angle={0}/>
+    <LP x={125} y={57} angle={90}/>
+    {/* curly arrow from C-Br bond → Br */}
+    <OA d="M 97,64 Q 112,44 128,60"/>
+    <RA x1={152} y1={72} x2={192} y2={72} above="slow (RDS)"/>
+    {/* carbocation */}
+    <BRK x={197} y={46} w={120} h={52}/>
+    <T x={240} y={72} t="(CH₃)₃C" c="#e2e8f0"/>
+    <Ch x={278} y={58} t="⁺"/>
+    <Lbl x={255} y={115} t="planar carbocation — sp² hybridised"/>
+    <T x={375} y={55} t="+" c="#64748b" s={16}/>
+    <T x={410} y={72} t="Br⁻" c="#c084fc"/>
+    <LP x={395} y={72} angle={180}/>
+    <Lbl x={100} y={125} t="step 1: C–X bond breaks heterolytically (no Nu needed)"/>
+  </MS>
+);
+
+const SN1_Step2 = () => (
+  <MS w={500} h={145}>
+    {/* carbocation */}
+    <T x={60}  y={72} t="(CH₃)₃C" c="#e2e8f0"/>
+    <Ch x={98} y={58} t="⁺"/>
+    <T x={130} y={64} t="+" c="#64748b" s={16}/>
+    {/* Nu: (HO-) */}
+    <T x={165} y={72} t="HO" c="#4ade80"/>
+    <Ch x={183} y={58} t="⁻"/>
+    <LP x={150} y={72} angle={180}/>
+    <LP x={165} y={58} angle={90}/>
+    {/* curly arrow from LP → carbocation C */}
+    <OA d="M 152,64 Q 120,38 100,60"/>
+    <RA x1={200} y1={72} x2={240} y2={72} above="fast"/>
+    <T x={295} y={72} t="(CH₃)₃COH" c="#4ade80"/>
+    {/* racemisation note */}
+    <Lbl x={250} y={115} t="Nu attacks from either face equally → racemic mixture"/>
+    <Lbl x={80}  y={132} t="step 2: nucleophile attacks planar carbocation (fast)"/>
+    {/* arrows showing both faces */}
+    <OA d="M 152,56 Q 118,32 100,52"/>
+    <OA d="M 152,80 Q 118,105 100,84"/>
+    <Lbl x={65} y={90} t="top face" c="#94a3b8"/>
+    <Lbl x={65} y={55} t="bottom face" c="#94a3b8"/>
+  </MS>
+);
+
+// ── Elimination ───────────────────────────────────────────────────────────
+const Elim_Diag = () => (
+  <MS w={540} h={158}>
+    {/* base (OH-) approaching H */}
+    <T x={42} y={72} t="HO" c="#4ade80"/>
+    <Ch x={60} y={58} t="⁻"/>
+    <LP x={27} y={72} angle={180}/>
+    <LP x={42} y={57} angle={90}/>
+    {/* C-H bond */}
+    <T x={108} y={55} t="H" c="#64748b" s={12}/>
+    <BD x1={108} y1={63} x2={108} y2={74}/>
+    {/* curly arrow: LP → H (base removes proton) */}
+    <OA d="M 44,64 Q 72,40 100,58"/>
+    {/* central C */}
+    <T x={108} y={85} t="C" c="#e2e8f0"/>
+    <BD x1={108} y1={75} x2={145} y2={85}/>
+    {/* C-C bond */}
+    <T x={158} y={85} t="C" c="#e2e8f0"/>
+    <T x={158} y={63} t="H₂" c="#64748b" s={11}/>
+    {/* C-Br bond */}
+    <BD x1={170} y1={85} x2={210} y2={85}/>
+    <T x={225} y={85} t="Br" c="#c084fc"/>
+    <LP x={240} y={85} angle={0}/>
+    <LP x={225} y={70} angle={90}/>
+    {/* curly arrow: C-C forms double bond (electrons from C-H) */}
+    <OA d="M 108,74 Q 130,58 148,78"/>
+    {/* curly arrow: C-Br breaks → Br- */}
+    <OA d="M 180,78 Q 200,58 222,72"/>
+    <RA x1={255} y1={85} x2={295} y2={85}/>
+    {/* alkene product */}
+    <T x={325} y={73} t="C" c="#e2e8f0"/>
+    <BD x1={337} y1={73} x2={365} y2={73} n={2}/>
+    <T x={377} y={73} t="C" c="#e2e8f0"/>
+    <T x={415} y={68} t="+" c="#64748b" s={15}/>
+    <T x={445} y={73} t="H₂O" c="#e2e8f0"/>
+    <T x={415} y={88} t="+" c="#64748b" s={15}/>
+    <T x={445} y={90} t="Br⁻" c="#c084fc"/>
+    <Lbl x={120} y={142} t="3 simultaneous bond changes: C–H breaks, C=C forms, C–Br breaks"/>
+    <Lbl x={380} y={142} t="E2 mechanism (one step)"/>
+  </MS>
+);
+
+// ── Nucleophilic Addition (Carbonyl) ─────────────────────────────────────
+const HCN_Add = () => (
+  <MS w={530} h={165}>
+    {/* C=O */}
+    <T x={118} y={75} t="C" c="#e2e8f0"/>
+    <BD x1={130} y1={75} x2={162} y2={75} n={2}/>
+    <T x={175} y={75} t="O" c="#f87171"/>
+    <LP x={192} y={75} angle={0}/>
+    <LP x={175} y={59} angle={90}/>
+    <Dl x={115} y={60} t="+"/>
+    <Dl x={170} y={58} t="−"/>
+    {/* R groups on C */}
+    <BD x1={118} y1={65} x2={100} y2={52}/>
+    <T x={90}  y={46} t="R"  c="#64748b" s={12}/>
+    <BD x1={105} y1={78} x2={87}  y2={88}/>
+    <T x={78}  y={95} t="H"  c="#64748b" s={11}/>
+    {/* CN⁻ approaching */}
+    <T x={40}  y={75} t="CN" c="#4ade80"/>
+    <Ch x={58}  y={62} t="⁻"/>
+    <LP x={25}  y={75} angle={180}/>
+    <LP x={40}  y={60} angle={90}/>
+    {/* curly arrow: CN⁻ LP → carbonyl C */}
+    <OA d="M 27,67 Q 72,38 110,70"/>
+    {/* curly arrow: C=O π bond → O */}
+    <OA d="M 143,68 Q 158,50 172,62"/>
+    <RA x1={205} y1={75} x2={245} y2={75}/>
+    {/* alkoxide intermediate */}
+    <BRK x={250} y={50} w={125} h={52}/>
+    <T x={268} y={75} t="CN" c="#4ade80" s={13}/>
+    <BD x1={283} y1={75} x2={302} y2={75}/>
+    <T x={314} y={75} t="C" c="#e2e8f0" s={13}/>
+    <BD x1={326} y1={75} x2={355} y2={75}/>
+    <T x={367} y={75} t="O" c="#f87171" s={13}/>
+    <Ch x={376} y={62} t="⁻"/>
+    <Lbl x={310} y={120} t="alkoxide intermediate"/>
+    {/* step 2: protonation */}
+    <RA x1={380} y1={75} x2={415} y2={75}/>
+    <T x={430} y={75} t="+" c="#64748b"/>
+    <T x={445} y={75} t="H⁺" c="#64748b" s={12}/>
+    <RA x1={460} y1={75} x2={495} y2={75}/>
+    <T x={510} y={68} t="OH" c="#f87171" s={12}/>
+    <T x={510} y={88} t="group" c="#64748b" s={10}/>
+    <Lbl x={120} y={148} t="CN⁻ attacks the δ+ carbonyl carbon (step 1)"/>
+    <Lbl x={430} y={148} t="O⁻ protonated by HCN (step 2)"/>
+  </MS>
+);
+
+const NaBH4_Add = () => (
+  <MS w={490} h={148}>
+    {/* C=O */}
+    <T x={140} y={72} t="C" c="#e2e8f0"/>
+    <BD x1={152} y1={72} x2={183} y2={72} n={2}/>
+    <T x={196} y={72} t="O" c="#f87171"/>
+    <LP x={213} y={72} angle={0}/>
+    <LP x={196} y={56} angle={90}/>
+    <Dl x={138} y={56} t="+"/>
+    <Dl x={192} y={56} t="−"/>
+    <BD x1={130} y1={65} x2={112} y2={52}/>
+    <T x={102} y={46} t="R"  c="#64748b" s={12}/>
+    <BD x1={128} y1={78} x2={110} y2={90}/>
+    <T x={100} y={97} t="H/R" c="#64748b" s={11}/>
+    {/* H- from NaBH4 */}
+    <T x={50}  y={72} t="H" c="#4ade80" s={16}/>
+    <Ch x={62}  y={58} t="⁻"/>
+    {/* curly arrow: H⁻ → C */}
+    <OA d="M 58,64 Q 95,36 132,66"/>
+    {/* curly arrow: C=O π → O */}
+    <OA d="M 160,65 Q 175,46 188,58"/>
+    <RA x1={225} y1={72} x2={265} y2={72}/>
+    {/* alkoxide */}
+    <T x={285} y={72} t="H" c="#4ade80" s={13}/>
+    <BD x1={293} y1={72} x2={308} y2={72}/>
+    <T x={320} y={72} t="C" c="#e2e8f0" s={13}/>
+    <BD x1={332} y1={72} x2={355} y2={72}/>
+    <T x={367} y={72} t="O" c="#f87171" s={13}/>
+    <Ch x={376} y={59} t="⁻"/>
+    <RA x1={390} y1={72} x2={430} y2={72} above="H₂O"/>
+    <T x={460} y={65} t="C" c="#e2e8f0"/>
+    <BD x1={472} y1={65} x2={490} y2={65}/>
+    <T x={498} y={65} t="OH" c="#f87171" s={12}/>
+    <Lbl x={150} y={130} t="H⁻ (hydride) ion acts as nucleophile"/>
+    <Lbl x={400} y={130} t="alcohol product"/>
+  </MS>
+);
+
+// ── Benzene EAS ───────────────────────────────────────────────────────────
+const Benz_Nitration = () => (
+  <MS w={580} h={170}>
+    {/* NO2+ formation */}
+    <HdrLbl x={130} y={18} t="Step 1: Generate electrophile (NO₂⁺)" c="#f87171"/>
+    <T x={38}  y={45} t="HNO₃" c="#e2e8f0" s={12}/>
+    <T x={78}  y={38} t="+" c="#64748b" s={14}/>
+    <T x={105} y={45} t="H₂SO₄" c="#e2e8f0" s={12}/>
+    <RA x1={145} y1={45} x2={185} y2={45}/>
+    <T x={215} y={45} t="NO₂⁺" c="#facc15" s={13}/>
+    <T x={258} y={38} t="+" c="#64748b" s={14}/>
+    <T x={290} y={45} t="HSO₄⁻" c="#e2e8f0" s={12}/>
+    <T x={345} y={38} t="+" c="#64748b" s={14}/>
+    <T x={375} y={45} t="H₂O" c="#e2e8f0" s={12}/>
+    <Lbl x={208} y={62} t="nitronium ion (electrophile)"/>
+    {/* Benzene + NO2+ */}
+    <HdrLbl x={150} y={88} t="Step 2: NO₂⁺ attacks ring" c="#f87171"/>
+    <Benzene cx={70} cy={128} r={28} c="#f87171"/>
+    <T x={110} y={121} t="+" c="#64748b" s={14}/>
+    <T x={138} y={128} t="NO₂" c="#facc15"/>
+    <Ch x={158} y={114} t="⁺"/>
+    {/* curly arrow: ring π → NO2+ */}
+    <OA d="M 92,112 Q 118,100 132,118"/>
+    <RA x1={175} y1={128} x2={210} y2={128}/>
+    {/* arenium ion (sigma complex) */}
+    <BRK x={215} y={105} w={125} h={48}/>
+    <Benzene cx={260} cy={128} r={25} c="#64748b"/>
+    <T x={295} y={108} t="NO₂" c="#facc15" s={11}/>
+    <Ch x={338} y={110} t="⁺"/>
+    <Lbl x={278} y={165} t="arenium ion (σ-complex)"/>
+    <RA x1={344} y1={128} x2={380} y2={128}/>
+    {/* re-aromatise: lose H+ */}
+    <T x={395} y={128} t="−H⁺" c="#64748b" s={12}/>
+    <RA x1={415} y1={128} x2={445} y2={128}/>
+    <Benzene cx={490} cy={128} r={25} c="#4ade80"/>
+    <T x={490} y={108} t="NO₂" c="#facc15" s={11}/>
+    <Lbl x={490} y={165} t="nitrobenzene product"/>
+    <Lbl x={270} y={88} t="aromaticity restored by losing H⁺ — driving force"/>
+  </MS>
+);
+
+const Benz_Halogen = () => (
+  <MS w={560} h={155}>
+    <HdrLbl x={140} y={18} t="Friedel-Crafts: AlCl₃ generates Cl⁺ equivalent" c="#f87171"/>
+    {/* AlCl3 activates Cl2 */}
+    <T x={38}  y={45} t="Cl" c="#4ade80" s={13}/>
+    <BD x1={50} y1={45} x2={70} y2={45}/>
+    <T x={82}  y={45} t="Cl" c="#4ade80" s={13}/>
+    <T x={100} y={38} t="+" c="#64748b" s={13}/>
+    <T x={118} y={45} t="AlCl₃" c="#e2e8f0" s={13}/>
+    <OA d="M 60,37 Q 80,22 95,38"/>
+    <RA x1={148} y1={45} x2={188} y2={45}/>
+    <T x={210} y={45} t="Cl⁺" c="#facc15" s={13}/>
+    <T x={240} y={38} t="..." c="#64748b"/>
+    <T x={268} y={45} t="AlCl₄⁻" c="#64748b" s={12}/>
+    <Lbl x={210} y={65} t="electrophilic Cl species formed"/>
+    {/* Benzene attack */}
+    <Benzene cx={70} cy={118} r={27} c="#f87171"/>
+    <T x={110} y={112} t="+" c="#64748b" s={14}/>
+    <T x={135} y={118} t="Cl⁺" c="#facc15"/>
+    <OA d="M 92,102 Q 115,88 130,110"/>
+    <RA x1={158} y1={118} x2={195} y2={118}/>
+    <BRK x={200} y={95} w={110} h={48}/>
+    <Benzene cx={242} cy={118} r={22} c="#64748b"/>
+    <T x={272} y={100} t="Cl" c="#4ade80" s={11}/>
+    <Ch x={308} y={100} t="⁺"/>
+    <RA x1={315} y1={118} x2={352} y2={118}/>
+    <T x={365} y={118} t="−H⁺" c="#64748b" s={12}/>
+    <RA x1={388} y1={118} x2={422} y2={118}/>
+    <Benzene cx={462} cy={118} r={24} c="#4ade80"/>
+    <T x={462} y={99} t="Cl" c="#4ade80" s={11}/>
+    <Lbl x={462} y={150} t="chlorobenzene"/>
+    <Lbl x={242} y={150} t="arenium ion"/>
+  </MS>
+);
+
+// ── Acyl Chlorides ────────────────────────────────────────────────────────
+const Acyl_H2O = () => (
+  <MS w={560} h={162}>
+    {/* Acyl chloride */}
+    <T x={52}  y={75} t="R" c="#64748b"/>
+    <BD x1={64} y1={75} x2={88} y2={75}/>
+    <T x={100} y={75} t="C" c="#e2e8f0"/>
+    <BD x1={112} y1={75} x2={140} y2={75} n={2}/>
+    <T x={153} y={75} t="O" c="#f87171"/>
+    <BD x1={112} y1={80} x2={140} y2={90}/>
+    <T x={153} y={95} t="Cl" c="#c084fc"/>
+    <LP x={168} y={95} angle={0}/>
+    <LP x={153} y={108} angle={270}/>
+    <Dl x={98}  y={59} t="+"/>
+    {/* H2O nucleophile attacking C */}
+    <T x={38}  y={55} t="H₂O" c="#4ade80"/>
+    <LP x={22}  y={55} angle={180}/>
+    <LP x={38}  y={42} angle={90}/>
+    <OA d="M 24,47 Q 62,25 95,65"/>
+    {/* curly arrow: C=O π → O */}
+    <OA d="M 122,68 Q 138,52 148,66"/>
+    <RA x1={180} y1={82} x2={218} y2={82} above="add'n"/>
+    {/* Tetrahedral intermediate */}
+    <BRK x={222} y={52} w={130} h={58}/>
+    <T x={242} y={82} t="R" c="#64748b" s={12}/>
+    <BD x1={253} y1={82} x2={270} y2={82}/>
+    <T x={282} y={82} t="C" c="#e2e8f0" s={12}/>
+    <BD x1={294} y1={75} x2={308} y2={65}/>
+    <T x={318} y={60} t="OH" c="#f87171" s={11}/>
+    <BD x1={294} y1={89} x2={308} y2={99}/>
+    <T x={320} y={104} t="Cl" c="#c084fc" s={11}/>
+    <Ch x={350} y={59} t="⁻" c="#fca5a5"/>
+    <Lbl x={285} y={128} t="tetrahedral intermediate"/>
+    <RA x1={358} y1={82} x2={395} y2={82} above="elim'n"/>
+    {/* curly arrow: O-H → C (reform C=O, kick out Cl-) */}
+    {/* product: carboxylic acid */}
+    <T x={415} y={72} t="R" c="#64748b" s={12}/>
+    <BD x1={427} y1={72} x2={448} y2={72}/>
+    <T x={460} y={72} t="C" c="#e2e8f0" s={12}/>
+    <BD x1={472} y1={72} x2={498} y2={72} n={2}/>
+    <T x={510} y={72} t="O" c="#f87171" s={12}/>
+    <BD x1={472} y1={78} x2={498} y2={88}/>
+    <T x={510} y={92} t="OH" c="#f87171" s={12}/>
+    <T x={415} y={100} t="+ HCl" c="#c084fc" s={12}/>
+    <Lbl x={100} y={148} t="nucleophilic addition–elimination (two steps overall)"/>
+    <Lbl x={460} y={148} t="carboxylic acid product"/>
+  </MS>
+);
+
+const Acyl_NH3 = () => (
+  <MS w={530} h={148}>
+    {/* same but with NH3 */}
+    <T x={52}  y={72} t="R" c="#64748b"/>
+    <BD x1={64} y1={72} x2={88} y2={72}/>
+    <T x={100} y={72} t="C" c="#e2e8f0"/>
+    <BD x1={112} y1={72} x2={140} y2={72} n={2}/>
+    <T x={153} y={72} t="O" c="#f87171"/>
+    <BD x1={112} y1={77} x2={140} y2={88}/>
+    <T x={153} y={92} t="Cl" c="#c084fc"/>
+    <Dl x={98} y={56} t="+"/>
+    {/* NH3 */}
+    <T x={38} y={52} t="NH₃" c="#60a5fa"/>
+    <LP x={23} y={52} angle={180}/>
+    <LP x={38} y={38} angle={90}/>
+    <OA d="M 24,44 Q 62,22 95,62"/>
+    <OA d="M 122,65 Q 137,48 148,62"/>
+    <RA x1={178} y1={78} x2={215} y2={78}/>
+    {/* product: amide */}
+    <T x={235} y={72} t="R" c="#64748b" s={12}/>
+    <BD x1={247} y1={72} x2={268} y2={72}/>
+    <T x={280} y={72} t="C" c="#e2e8f0" s={12}/>
+    <BD x1={292} y1={72} x2={315} y2={72} n={2}/>
+    <T x={327} y={72} t="O" c="#f87171" s={12}/>
+    <BD x1={292} y1={78} x2={315} y2={88}/>
+    <T x={327} y={92} t="NH₂" c="#60a5fa" s={12}/>
+    <T x={235} y={100} t="+ NH₄Cl" c="#64748b" s={12}/>
+    <Lbl x={280} y={130} t="primary amide product"/>
+    <Lbl x={80}  y={130} t="lone pair on N attacks δ+ C"/>
+  </MS>
+);
+
+// ── Esterification ────────────────────────────────────────────────────────
+const Ester_Form = () => (
+  <MS w={560} h={155}>
+    {/* carboxylic acid */}
+    <T x={40}  y={72} t="R" c="#64748b"/>
+    <BD x1={52} y1={72} x2={75} y2={72}/>
+    <T x={87}  y={72} t="C" c="#e2e8f0"/>
+    <BD x1={99} y1={72} x2={126} y2={72} n={2}/>
+    <T x={138} y={72} t="O" c="#f87171"/>
+    <BD x1={99} y1={77} x2={126} y2={88}/>
+    <T x={138} y={92} t="OH" c="#f87171"/>
+    <T x={158} y={65} t="+" c="#64748b" s={16}/>
+    {/* alcohol */}
+    <T x={180} y={72} t="HO" c="#4ade80"/>
+    <BD x1={198} y1={72} x2={220} y2={72}/>
+    <T x={232} y={72} t="R'" c="#64748b"/>
+    <LP x={167} y={72} angle={180}/>
+    <LP x={180} y={57} angle={90}/>
+    {/* curly arrow: OH lone pair → carbonyl C */}
+    <OA d="M 168,64 Q 128,40 95,64"/>
+    {/* curly arrow: C=O breaks */}
+    <OA d="M 108,65 Q 122,48 132,65"/>
+    <EA x1={255} y={75} x2={305} y2={75}/>
+    <T x={280} y={88} t="H⁺, Δ" c="#94a3b8" s={10}/>
+    {/* ester product */}
+    <T x={318} y={72} t="R" c="#64748b"/>
+    <BD x1={330} y1={72} x2={353} y2={72}/>
+    <T x={365} y={72} t="C" c="#e2e8f0"/>
+    <BD x1={377} y1={72} x2={404} y2={72} n={2}/>
+    <T x={416} y={72} t="O" c="#f87171"/>
+    <BD x1={377} y1={77} x2={404} y2={88}/>
+    <T x={416} y={92} t="O" c="#f87171"/>
+    <BD x1={428} y1={92} x2={448} y2={92}/>
+    <T x={460} y={92} t="R'" c="#64748b"/>
+    <T x={475} y={65} t="+ H₂O" c="#e2e8f0" s={12}/>
+    <Lbl x={100} y={138} t="alcohol OH lone pair attacks δ+ carbonyl C"/>
+    <Lbl x={400} y={138} t="ester linkage (C–O–C=O)"/>
+  </MS>
+);
+
+const Ester_Hydrolysis = () => (
+  <MS w={540} h={148}>
+    {/* Ester */}
+    <T x={38}  y={72} t="R" c="#64748b"/>
+    <BD x1={50} y1={72} x2={73} y2={72}/>
+    <T x={85}  y={72} t="C" c="#e2e8f0"/>
+    <BD x1={97} y1={72} x2={124} y2={72} n={2}/>
+    <T x={136} y={72} t="O" c="#f87171"/>
+    <BD x1={97} y1={77} x2={124} y2={88}/>
+    <T x={136} y={92} t="O" c="#f87171"/>
+    <BD x1={148} y1={92} x2={170} y2={92}/>
+    <T x={182} y={92} t="R'" c="#64748b"/>
+    {/* OH- attacking */}
+    <T x={38} y={45} t="OH" c="#4ade80"/>
+    <Ch x={57} y={33} t="⁻"/>
+    <LP x={24} y={45} angle={180}/>
+    <LP x={38} y={30} angle={90}/>
+    <OA d="M 25,37 Q 58,15 82,62"/>
+    <OA d="M 106,65 Q 120,48 130,65"/>
+    <RA x1={200} y1={80} x2={238} y2={80} above="base hydrolysis"/>
+    {/* products */}
+    <T x={258} y={72} t="R" c="#64748b" s={12}/>
+    <BD x1={270} y1={72} x2={290} y2={72}/>
+    <T x={302} y={72} t="COO" c="#f87171" s={12}/>
+    <Ch x={330} y={60} t="⁻"/>
+    <T x={258} y={100} t="+ R'OH" c="#64748b" s={12}/>
+    <Lbl x={295} y={132} t="carboxylate ion (irreversible — drives to completion)"/>
+    <T x={408} y={72} t="vs." c="#64748b" s={12}/>
+    <T x={430} y={60} t="Acid hydrolysis:" c="#94a3b8" s={11}/>
+    <T x={430} y={78} t="H⁺ + H₂O, Δ" c="#94a3b8" s={11}/>
+    <T x={430} y={96} t="reversible" c="#94a3b8" s={11}/>
+    <T x={430} y={114} t="→ RCOOH + R'OH" c="#f87171" s={11}/>
+  </MS>
+);
+
+// ── Amines ────────────────────────────────────────────────────────────────
+const Amine_Basic = () => (
+  <MS w={480} h={142}>
+    <HdrLbl x={240} y={18} t="Amines as Brønsted-Lowry bases — lone pair accepts H⁺" c="#34d399"/>
+    <T x={55}  y={82} t="R-NH₂" c="#60a5fa"/>
+    <LP x={92}  y={70} angle={90}/>
+    <LP x={92}  y={70} angle={135}/>
+    <T x={128} y={74} t="+" c="#64748b" s={16}/>
+    <T x={158} y={82} t="H₂O" c="#e2e8f0"/>
+    {/* curly arrow: LP on N → H of water */}
+    <OA d="M 94,62 Q 120,40 152,72"/>
+    {/* curly arrow: O-H bond → O (as lone pair) */}
+    <OA d="M 165,72 Q 175,55 180,62"/>
+    <EA x1={192} y={82} x2={240} y2={82}/>
+    <T x={265} y={72} t="RNH₃" c="#60a5fa" s={13}/>
+    <Ch x={296} y={58} t="⁺"/>
+    <T x={310} y={74} t="+" c="#64748b" s={14}/>
+    <T x={338} y={82} t="OH⁻" c="#f87171" s={13}/>
+    <Lbl x={130} y={125} t="lone pair on N is the source of basicity"/>
+    <Lbl x={320} y={125} t="equilibrium lies LEFT (weak base)"/>
+  </MS>
+);
+
+const Amine_NuSub = () => (
+  <MS w={520} h={148}>
+    <HdrLbl x={260} y={18} t="Amine as nucleophile — N-alkylation" c="#34d399"/>
+    <T x={48}  y={82} t="R-NH₂" c="#60a5fa"/>
+    <LP x={88}  y={70} angle={90}/>
+    {/* curly arrow from LP to carbon of halogenoalkane */}
+    <OA d="M 90,62 Q 140,35 178,72"/>
+    <T x={155} y={68} t="δ+" c="#fde68a" s={10}/>
+    <T x={195} y={82} t="C" c="#e2e8f0"/>
+    <BD x1={207} y1={82} x2={235} y2={82}/>
+    <T x={248} y={82} t="Br" c="#c084fc"/>
+    <LP x={263} y={82} angle={0}/>
+    <Dl x={244} y={66} t="−"/>
+    <OA d="M 220,74 Q 236,54 248,68"/>
+    <RA x1={270} y1={82} x2={308} y2={82}/>
+    {/* ammonium salt → secondary amine */}
+    <T x={330} y={72} t="R₂NH₂" c="#60a5fa" s={13}/>
+    <Ch x={368} y={58} t="⁺"/>
+    <T x={385} y={74} t="Br⁻" c="#c084fc" s={13}/>
+    <RA x1={408} y1={82} x2={440} y2={82} above="+R-NH₂"/>
+    <T x={468} y={72} t="R₂NH" c="#60a5fa" s={13}/>
+    <Lbl x={180} y={132} t="mixture of primary, secondary, tertiary amines + quaternary salt"/>
+    <Lbl x={430} y={132} t="excess NH₃ limits this"/>
+  </MS>
+);
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  CONTENT
+// ═══════════════════════════════════════════════════════════════════════════
+const content = {
+  frs: (c) => (
+    <>
+      <InfoBox bg="rgba(250,204,21,0.06)" border="rgba(250,204,21,0.2)">
+        <span style={{color:"#fde68a"}}><b>Key idea:</b></span><span style={{color:"#fde68a"}}> Free radical substitution uses UV light to homolytically break bonds — each atom gets ONE electron (fishhook arrow). Three stages: initiation, propagation (×2 steps), termination.</span>
+      </InfoBox>
+      <SectionHead t="Stage 1 — Initiation" c={c}/>
+      <MCard title="Cl₂ → 2Cl•" type="Homolytic fission" color={c}
+        reagents="Cl₂ (or Br₂)" conditions="UV light"
+        diagram={<FRS_Init/>}
+        steps={[
+          "UV light provides energy to break the Cl–Cl bond.",
+          "Each Cl atom gets one electron → two Cl• radicals formed.",
+          "Fishhook (half-headed) arrows show one electron moving — NOT a full curly arrow.",
+          "This only happens once — just to start the chain."
+        ]}
+        note="Homolytic fission: both electrons split equally between atoms. Heterolytic fission (like in ionic mechanisms) has both electrons going to one atom."
+      />
+      <SectionHead t="Stage 2 — Propagation (chain reaction)" c={c}/>
+      <MCard title="Two-step chain" type="Radical substitution" color={c}
+        reagents="CH₄ + Cl•" conditions="UV, gas phase"
+        diagram={<FRS_Prop/>}
+        steps={[
+          "Step A: Cl• attacks a C–H bond. One electron from C–H joins H to form HCl. The other electron stays on C as •CH₃.",
+          "Step B: •CH₃ attacks Cl₂. One electron from Cl–Cl joins C to form CH₃Cl. The other electron leaves as Cl•.",
+          "The Cl• produced in step B starts step A again — this is why it's called a chain reaction.",
+          "These two steps repeat thousands of times per initiation event."
+        ]}
+        note="Propagation steps always consume one radical and produce one radical — net radicals = constant. The chain only ends in termination."
+      />
+      <SectionHead t="Stage 3 — Termination" c={c}/>
+      <MCard title="Any two radicals combine" type="Chain termination" color={c}
+        diagram={<FRS_Term/>}
+        steps={[
+          "Two radicals collide and their unpaired electrons form a new covalent bond.",
+          "No new radicals are produced — the chain stops.",
+          "Multiple products are possible: Cl₂, CH₃Cl, or C₂H₆.",
+          "C₂H₆ is an unwanted by-product — this is why FRS gives a mixture of products."
+        ]}
+        note="FRS always gives a mixture (CH₃Cl, CH₂Cl₂, CHCl₃, CCl₄) — this is a weakness of the reaction. Excess CH₄ favours monosubstitution."
+      />
+    </>
+  ),
+
+  ea: (c) => (
+    <>
+      <InfoBox bg="rgba(74,222,128,0.06)" border="rgba(74,222,128,0.2)">
+        <span style={{color:"#86efac"}}><b>Key idea:</b></span><span style={{color:"#86efac"}}> The electron-rich C=C π bond acts as a nucleophile and attacks an electrophile. The π bond electrons are the source — always draw the curly arrow FROM the C=C.</span>
+      </InfoBox>
+      <SectionHead t="Addition of Br₂" c={c}/>
+      <MCard title="Alkene + Br₂ — Step 1: Bromonium formation" type="Electrophilic addition" color={c}
+        reagents="Br₂" conditions="Room temperature (no UV — that would be FRS)"
+        obs="Orange/brown bromine water decolourises"
+        diagram={<EA_Br2_Step1/>}
+        steps={[
+          "The electron-dense π bond polarises the Br–Br bond — Br nearest alkene becomes δ+.",
+          "π electrons attack the δ+ Br. Simultaneously, the Br–Br bond breaks heterolytically → Br⁻ leaves.",
+          "A cyclic bromonium ion intermediate forms (3-membered ring with Br bridging both carbons).",
+          "This intermediate prevents rotation about the C–C bond."
+        ]}
+        note="The bromonium ion explains WHY you get anti addition — the Br⁺ bridges from one face, so Br⁻ must attack from the opposite face."
+      />
+      <MCard title="Alkene + Br₂ — Step 2: Br⁻ attacks bromonium" type="Electrophilic addition" color={c}
+        diagram={<EA_Br2_Step2/>}
+        steps={[
+          "Br⁻ uses a lone pair to attack one of the carbons from the back face (opposite the bridging Br).",
+          "The C–Br bond in the bromonium breaks, freeing that carbon.",
+          "Product: 1,2-dibromoalkane with ANTI stereochemistry (the two Br atoms are trans).",
+          "This is the test for a C=C double bond — bromine water decolourises."
+        ]}
+        note="Anti addition is important for AQA — it arises from the bromonium mechanism. Syn addition is NOT possible with Br₂."
+      />
+      <SectionHead t="Addition of HBr (Markovnikov)" c={c}/>
+      <MCard title="Alkene + HBr" type="Electrophilic addition" color={c}
+        reagents="HBr" conditions="Room temperature, no catalyst"
+        diagram={<EA_HBr/>}
+        steps={[
+          "HBr is polarised (H is δ+, Br is δ−) because Br is more electronegative.",
+          "The π electrons attack the δ+ H. H–Br bond breaks, Br⁻ leaves as the leaving group.",
+          "A carbocation forms on the carbon that had more H's. The more substituted carbocation is more stable (Markovnikov's rule).",
+          "Br⁻ uses a lone pair to attack the carbocation → product."
+        ]}
+        note="Markovnikov's rule: H adds to the carbon already bearing more H's (i.e. the less substituted carbon). The major product is from the more stable (more substituted) carbocation."
+      />
+    </>
+  ),
+
+  sn2: (c) => (
+    <>
+      <InfoBox bg="rgba(96,165,250,0.06)" border="rgba(96,165,250,0.2)">
+        <span style={{color:"#bfdbfe"}}><b>Key idea:</b></span><span style={{color:"#bfdbfe"}}> SN2 is a ONE-STEP mechanism. The nucleophile attacks from 180° to the leaving group (backside attack), and as it forms a bond, the leaving group departs simultaneously. Configuration is INVERTED (Walden inversion). SN2 is favoured by primary halogenoalkanes.</span>
+      </InfoBox>
+      <MCard title="Nucleophilic Substitution — SN2" type="One-step, bimolecular" color={c}
+        reagents="NaOH (aq) or KCN or NH₃" conditions="Aqueous solution, heat (or ethanol for CN⁻ and NH₃)"
+        diagram={<SN2_Diag/>}
+        steps={[
+          "The nucleophile (e.g. HO⁻) uses a lone pair to attack the δ+ carbon from exactly 180° behind the leaving group.",
+          "As the Nu–C bond forms, the C–Br bond weakens and stretches simultaneously — ONE STEP (concerted).",
+          "The transition state has five groups around the central carbon (trigonal bipyramidal), with partial bonds to both Nu and LG.",
+          "The leaving group departs as Br⁻, taking both electrons from the C–Br bond.",
+          "The three remaining groups on C 'flip through' like an umbrella — Walden inversion of configuration."
+        ]}
+        note="Rate = k[Nu][RX] — bimolecular. Bulky (tertiary) substrates cannot be attacked from behind → SN1 instead. Primary is ideal for SN2."
+        extra={
+          <div style={{marginTop:14}}>
+            <div style={{color:"#94a3b8",fontSize:"0.82em",fontWeight:700,marginBottom:8}}>Common SN2 Reactions:</div>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:"0.8em",color:"#cbd5e1"}}>
+              <thead><tr style={{borderBottom:"1px solid rgba(255,255,255,0.12)"}}>
+                {["Nucleophile","Reagent/solvent","Product"].map(h=><th key={h} style={{padding:"6px 10px",textAlign:"left",color:c}}>{h}</th>)}
+              </tr></thead>
+              <tbody>
+                {[
+                  ["HO⁻","NaOH (aq)","Alcohol (–OH)"],
+                  ["CN⁻","KCN / ethanol","Nitrile (–CN, chain +1C)"],
+                  ["NH₃","Excess NH₃ / ethanol","Amine (–NH₂, then further)"],
+                  ["RO⁻","Alkoxide / ethanol","Ether (–OR)"],
+                ].map(([a,b,cc])=>(
+                  <tr key={a} style={{borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+                    <td style={{padding:"6px 10px",fontFamily:"monospace"}}>{a}</td>
+                    <td style={{padding:"6px 10px"}}>{b}</td>
+                    <td style={{padding:"6px 10px"}}>{cc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        }
+      />
+    </>
+  ),
+
+  sn1: (c) => (
+    <>
+      <InfoBox bg="rgba(167,139,250,0.06)" border="rgba(167,139,250,0.2)">
+        <span style={{color:"#ddd6fe"}}><b>Key idea:</b></span><span style={{color:"#ddd6fe"}}> SN1 is a TWO-STEP mechanism. The C–X bond breaks first to form a CARBOCATION intermediate (slow, rate-determining step). Then the nucleophile attacks. Favoured by TERTIARY halogenoalkanes. Gives RACEMIC mixture because Nu can attack from either face of the flat sp² carbocation.</span>
+      </InfoBox>
+      <MCard title="SN1 — Step 1: Ionisation (slow, RDS)" type="Rate-determining step" color={c}
+        reagents="NaOH (aq) or H₂O" conditions="Polar protic solvent (water/ethanol)"
+        diagram={<SN1_Step1/>}
+        steps={[
+          "The C–X bond breaks heterolytically — BOTH electrons go to X (leaving group).",
+          "A planar carbocation forms — the central C is sp² hybridised with an empty p orbital.",
+          "This step is SLOW because it requires energy to separate charges.",
+          "Tertiary carbocations are most stable (3 alkyl groups donating electron density).",
+          "This step does NOT involve the nucleophile — rate = k[RX] only (unimolecular)."
+        ]}
+        note="The carbocation is planar — this is why SN1 leads to racemisation. If the original carbon was a chiral centre, both enantiomers are produced in equal amounts."
+      />
+      <MCard title="SN1 — Step 2: Nucleophilic attack (fast)" type="Product-forming step" color={c}
+        diagram={<SN1_Step2/>}
+        steps={[
+          "The nucleophile (e.g. HO⁻) uses a lone pair to attack the empty p orbital of the carbocation.",
+          "Attack can occur from either face of the flat carbocation — both are equally accessible.",
+          "This gives a 50:50 mixture of enantiomers (racemic mixture) if the carbon is chiral.",
+          "This step is fast — the carbocation is highly reactive."
+        ]}
+        note="Compare SN1 vs SN2: SN1 = 2 steps, tertiary, racemisation, rate doesn't depend on Nu. SN2 = 1 step, primary, inversion, rate depends on Nu."
+      />
+    </>
+  ),
+
+  elim: (c) => (
+    <>
+      <InfoBox bg="rgba(251,146,60,0.06)" border="rgba(251,146,60,0.2)">
+        <span style={{color:"#fed7aa"}}><b>Key idea:</b></span><span style={{color:"#fed7aa"}}> Elimination competes with nucleophilic substitution. Use KOH in ETHANOL (not water) and HEAT to favour elimination. The base removes an H from the adjacent carbon, while the C–X bond breaks, and a C=C forms — all simultaneously (E2).</span>
+      </InfoBox>
+      <MCard title="Elimination (E2) — KOH/ethanol" type="E2 bimolecular elimination" color={c}
+        reagents="KOH" conditions="Ethanol solvent, heat — key! (aqueous KOH gives substitution instead)"
+        obs="Alkene formed (test with bromine water — decolourises)"
+        diagram={<Elim_Diag/>}
+        steps={[
+          "KOH/ethanol: OH⁻ acts as a BASE (not a nucleophile). It abstracts an H from the β-carbon (adjacent to the C–X carbon).",
+          "Three bond changes happen simultaneously: C–H breaks, C=C double bond forms, C–Br breaks.",
+          "The H and Br are removed from adjacent carbons (anti-periplanar arrangement preferred).",
+          "Products: alkene + water + Br⁻ (or other halide).",
+          "If there are two possible alkenes (different β-Hs), the more substituted alkene is the major product (Zaitsev's rule)."
+        ]}
+        note="The choice: KOH/ethanol/heat → elimination (alkene). NaOH/water/heat → substitution (alcohol). This is a classic exam question — the solvent and temperature make all the difference."
+      />
+    </>
+  ),
+
+  carb: (c) => (
+    <>
+      <InfoBox bg="rgba(192,132,252,0.06)" border="rgba(192,132,252,0.2)">
+        <span style={{color:"#e9d5ff"}}><b>Key idea:</b></span><span style={{color:"#e9d5ff"}}> The C=O carbonyl is polarised (C is δ+, O is δ−). Nucleophiles attack the δ+ carbon. The π bond breaks, electrons move to the electronegative O, forming an alkoxide intermediate which then gets protonated.</span>
+      </InfoBox>
+      <SectionHead t="HCN Addition (Nucleophilic Addition)" c={c}/>
+      <MCard title="Aldehyde/Ketone + HCN → Hydroxynitrile" type="Nucleophilic addition" color={c}
+        reagents="HCN (or NaCN + HCl)" conditions="Room temperature, KCN catalyst (provides CN⁻)"
+        diagram={<HCN_Add/>}
+        steps={[
+          "CN⁻ (cyanide ion) is the nucleophile — it uses a lone pair on C to attack the δ+ carbonyl carbon.",
+          "The C=O π bond breaks: both electrons move to O, forming an alkoxide (O⁻) intermediate.",
+          "The O⁻ intermediate is protonated by HCN (or water): O⁻ + HCN → OH + CN⁻. Note: CN⁻ is regenerated — it's a catalyst.",
+          "Product: a hydroxynitrile (also called a cyanohydrin). The molecule has a new C–C bond and a new C–N bond."
+        ]}
+        note="Increasing carbon chain by 1 (nitrile can be hydrolysed to carboxylic acid or reduced to amine). Important for synthesis questions. Aldehydes react faster than ketones (less steric hindrance, more δ+)."
+        obs="Colourless liquid product. Test: prussian blue or silver mirror? No — use bromine water to check if C=O is gone."
+      />
+      <SectionHead t="NaBH₄ Reduction" c={c}/>
+      <MCard title="Carbonyl + NaBH₄ → Alcohol" type="Nucleophilic addition (reduction)" color={c}
+        reagents="NaBH₄ (sodium borohydride)" conditions="Aqueous ethanol, room temperature"
+        obs="Colourless liquid product. Fehling's/Tollens' reaction ceases if aldehyde was present."
+        diagram={<NaBH4_Add/>}
+        steps={[
+          "NaBH₄ provides H⁻ (hydride ion) — this is the nucleophile. H⁻ is a 2-electron donor.",
+          "H⁻ attacks the δ+ carbonyl carbon using its pair of electrons.",
+          "The C=O π bond breaks: electrons move to O, forming alkoxide (O⁻).",
+          "Water protonates the O⁻ to give –OH. Product: primary alcohol (from aldehyde) or secondary alcohol (from ketone)."
+        ]}
+        note="Reduction: C gains H (or loses O). NaBH₄ is a mild reducing agent — it reduces C=O but NOT C=C. LiAlH₄ is stronger (reduces esters, carboxylic acids too) but not required for AQA."
+      />
+    </>
+  ),
+
+  benz: (c) => (
+    <>
+      <InfoBox bg="rgba(248,113,113,0.06)" border="rgba(248,113,113,0.2)">
+        <span style={{color:"#fecaca"}}><b>Key idea:</b></span><span style={{color:"#fecaca"}}> Benzene undergoes SUBSTITUTION not addition — to preserve the stable delocalised ring. An electrophile is generated (often by a Lewis acid catalyst like AlCl₃), it attacks the ring forming an arenium ion (σ-complex), then H⁺ is lost to restore aromaticity.</span>
+      </InfoBox>
+      <SectionHead t="Nitration" c={c}/>
+      <MCard title="Benzene + Conc HNO₃/H₂SO₄ → Nitrobenzene" type="Electrophilic aromatic substitution" color={c}
+        reagents="Conc HNO₃ + conc H₂SO₄" conditions="50°C (above 55°C gets dinitration)"
+        obs="Pale yellow oily liquid (nitrobenzene) with a sweet/almond smell. Brown fumes if overheated."
+        diagram={<Benz_Nitration/>}
+        steps={[
+          "H₂SO₄ protonates HNO₃, then water leaves to form the nitronium ion: NO₂⁺. This is the electrophile.",
+          "NO₂⁺ attacks the delocalised π system of benzene — one C–C π bond attacks the electrophile.",
+          "An arenium ion (σ-complex / Wheland intermediate) forms — the ring is no longer aromatic (one sp³ carbon).",
+          "A base (HSO₄⁻) removes an H⁺ from the sp³ carbon to restore aromaticity.",
+          "Driving force: restoring the stable aromatic system. This is why SUBSTITUTION not ADDITION occurs."
+        ]}
+        note="Temperature control is critical — 50°C gives mono-nitration. Higher temperatures give di/tri-nitration (explosive TNT analogue). Keep below 55°C."
+      />
+      <SectionHead t="Friedel-Crafts (Halogenation)" c={c}/>
+      <MCard title="Benzene + Cl₂/AlCl₃ → Chlorobenzene" type="Electrophilic aromatic substitution" color={c}
+        reagents="Cl₂ + AlCl₃ (or FeBr₃ for bromination)" conditions="Room temperature, anhydrous (no water — AlCl₃ is moisture-sensitive)"
+        obs="White fumes of HCl. Colourless chlorobenzene product."
+        diagram={<Benz_Halogen/>}
+        steps={[
+          "AlCl₃ is a Lewis acid — it accepts an electron pair from Cl₂, polarising/breaking the Cl–Cl bond to generate Cl⁺ (or Cl–AlCl₄⁻ complex acting as Cl⁺ donor).",
+          "Cl⁺ (the electrophile) attacks the benzene ring π system — forms arenium ion.",
+          "AlCl₄⁻ acts as a base, removing H⁺ from the arenium ion.",
+          "Aromaticity is restored → chlorobenzene + HCl + AlCl₃ (catalyst regenerated)."
+        ]}
+        note="AlCl₃ acts as a catalyst — it is regenerated. FeBr₃ works the same way for bromination. Without a Lewis acid catalyst, Cl₂ does NOT react with benzene under normal conditions (ring is not nucleophilic enough to polarise Cl₂ on its own)."
+      />
+    </>
+  ),
+
+  acyl: (c) => (
+    <>
+      <InfoBox bg="rgba(103,232,249,0.06)" border="rgba(103,232,249,0.2)">
+        <span style={{color:"#cffafe"}}><b>Key idea:</b></span><span style={{color:"#cffafe"}}> Acyl chlorides (RCOCl) react via nucleophilic addition–elimination. The nucleophile adds to the C=O (like carbonyl), but then Cl⁻ is eliminated to restore C=O. These reactions are fast and vigorous — no catalyst needed (unlike esters).</span>
+      </InfoBox>
+      <MCard title="Acyl Chloride + H₂O → Carboxylic Acid" type="Nucleophilic addition–elimination" color={c}
+        reagents="RCOCl + water" conditions="Room temperature (vigorous reaction)"
+        obs="Steamy white fumes of HCl. Heat evolved."
+        diagram={<Acyl_H2O/>}
+        steps={[
+          "H₂O lone pair attacks the δ+ acyl carbon (addition step).",
+          "C=O π bond breaks temporarily — O⁻ forms on the carbonyl oxygen (tetrahedral intermediate).",
+          "The tetrahedral intermediate collapses: C=O reforms, Cl⁻ is expelled as the leaving group (elimination).",
+          "An H⁺ is lost from the –OH₂⁺ group → carboxylic acid + HCl."
+        ]}
+        note="Acyl chlorides react much faster than esters with nucleophiles because Cl⁻ is a better leaving group than RO⁻. This makes acylation reactions highly useful in synthesis."
+      />
+      <MCard title="Acyl Chloride + NH₃ → Amide" type="Nucleophilic addition–elimination" color={c}
+        reagents="RCOCl + excess NH₃" conditions="Room temperature (must use excess NH₃)"
+        obs="White fumes/solid of NH₄Cl form. The amide is a white solid."
+        diagram={<Acyl_NH3/>}
+        steps={[
+          "NH₃ lone pair on N attacks the δ+ acyl carbon.",
+          "Tetrahedral intermediate forms (C=O breaks, N–C bond forms).",
+          "Cl⁻ expelled, C=O re-forms — primary amide (RCONH₂) initially formed with NH₄⁺ and Cl⁻.",
+          "Excess NH₃ neutralises the HCl produced (NH₃ + HCl → NH₄Cl), otherwise the acid would destroy the product."
+        ]}
+        note="With a primary amine (RNH₂), you get a secondary amide (RCONHR). Same mechanism — the N lone pair attacks."
+        extra={
+          <div style={{marginTop:12,background:"rgba(255,255,255,0.03)",borderRadius:6,padding:"10px 14px",fontSize:"0.8em",color:"#cbd5e1"}}>
+            <b style={{color:c}}>Summary of acyl chloride reactions:</b>
+            <table style={{width:"100%",borderCollapse:"collapse",marginTop:6,fontSize:"0.85em"}}>
+              <thead><tr style={{borderBottom:"1px solid rgba(255,255,255,0.1)"}}>
+                {["Nucleophile","Reagent","Product"].map(h=><th key={h} style={{padding:"5px 8px",textAlign:"left",color:c}}>{h}</th>)}
+              </tr></thead>
+              <tbody>
+                {[
+                  ["H₂O","Water","Carboxylic acid (RCOOH) + HCl"],
+                  ["ROH","Alcohol","Ester (RCOOR') + HCl"],
+                  ["NH₃","Excess ammonia","Primary amide (RCONH₂) + NH₄Cl"],
+                  ["RNH₂","Primary amine","Secondary amide (RCONHR') + RNH₃Cl"],
+                ].map(([a,b,cc])=>(
+                  <tr key={a} style={{borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
+                    <td style={{padding:"5px 8px",fontFamily:"monospace"}}>{a}</td>
+                    <td style={{padding:"5px 8px"}}>{b}</td>
+                    <td style={{padding:"5px 8px"}}>{cc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        }
+      />
+    </>
+  ),
+
+  ester: (c) => (
+    <>
+      <InfoBox bg="rgba(167,139,250,0.06)" border="rgba(167,139,250,0.2)">
+        <span style={{color:"#ddd6fe"}}><b>Key idea:</b></span><span style={{color:"#ddd6fe"}}> Esterification is the reverse of hydrolysis — both reactions are reversible. Acid hydrolysis is reversible; base hydrolysis (saponification) is irreversible because carboxylate (RCOO⁻) doesn't react back with the alcohol.</span>
+      </InfoBox>
+      <SectionHead t="Ester Formation" c={c}/>
+      <MCard title="Carboxylic acid + Alcohol → Ester" type="Fischer esterification (reversible)" color={c}
+        reagents="Carboxylic acid + alcohol" conditions="Conc H₂SO₄ catalyst, heat, reflux"
+        obs="Sweet-smelling ester layer. Equilibrium — yield never 100%."
+        diagram={<Ester_Form/>}
+        steps={[
+          "H⁺ (from H₂SO₄) protonates the carbonyl oxygen → makes C more electrophilic (δ+ increases).",
+          "The alcohol OH lone pair attacks the activated carbonyl C (nucleophilic addition).",
+          "A tetrahedral intermediate forms with two OH groups.",
+          "One OH group is protonated and lost as water (elimination step).",
+          "H⁺ leaves from the remaining O — ester product + H₂O."
+        ]}
+        note="Equilibrium — use excess of one reactant (usually alcohol) or remove water continuously to drive forward. Conc H₂SO₄ is a catalyst AND a drying agent."
+      />
+      <SectionHead t="Ester Hydrolysis" c={c}/>
+      <MCard title="Ester + H₂O/NaOH → acid/alcohol" type="Nucleophilic addition–elimination (hydrolysis)" color={c}
+        reagents="(a) Dilute H₂SO₄ or HCl + water,  (b) NaOH (aq)" conditions="Heat, reflux"
+        diagram={<Ester_Hydrolysis/>}
+        steps={[
+          "ACID hydrolysis: H⁺ activates the C=O. Water acts as nucleophile, attacks C. Tetrahedral intermediate collapses, alcohol leaves. Gives carboxylic acid + alcohol. REVERSIBLE.",
+          "BASE hydrolysis (saponification): OH⁻ directly attacks the carbonyl C. Tetrahedral intermediate forms. Alcohol departs as leaving group. Product is CARBOXYLATE ion (RCOO⁻) — this cannot reverse with the alcohol (different energetics). IRREVERSIBLE.",
+          "Base hydrolysis goes to completion — equilibrium lies fully to the right because RCOO⁻ is a stable anion."
+        ]}
+        note="Saponification is used in soap-making: fat (glycerol ester) + NaOH → glycerol + sodium salt of fatty acid (soap). The sodium carboxylate salt is the soap."
+      />
+    </>
+  ),
+
+  amines: (c) => (
+    <>
+      <InfoBox bg="rgba(52,211,153,0.06)" border="rgba(52,211,153,0.2)">
+        <span style={{color:"#a7f3d0"}}><b>Key idea:</b></span><span style={{color:"#a7f3d0"}}> Amines are bases AND nucleophiles — both because of the lone pair on N. As bases they accept H⁺. As nucleophiles they attack electrophilic carbons. Aryl amines (like aniline) are weaker bases because the lone pair is delocalised into the benzene ring.</span>
+      </InfoBox>
+      <SectionHead t="Amines as Bases" c={c}/>
+      <MCard title="R-NH₂ + H₂O ⇌ RNH₃⁺ + OH⁻" type="Brønsted-Lowry base" color={c}
+        diagram={<Amine_Basic/>}
+        steps={[
+          "The lone pair on N accepts a proton (H⁺) from water — this is the definition of a Brønsted-Lowry base.",
+          "Equilibrium lies to the LEFT (amines are WEAK bases) — only partial protonation.",
+          "Alkyl amines (CH₃NH₂) are stronger bases than NH₃ — alkyl groups donate electron density to N, making LP more available.",
+          "Aryl amines (PhNH₂, aniline) are weaker bases than NH₃ — LP is delocalised into the aromatic ring, less available."
+        ]}
+        note="Basicity order: aryl amine < NH₃ < primary alkyl amine < secondary alkyl amine. With HCl: amine + HCl → ammonium salt (R-NH₃⁺Cl⁻). These salts are white solids, soluble in water."
+      />
+      <SectionHead t="Amines as Nucleophiles" c={c}/>
+      <MCard title="R-NH₂ + RX → alkylammonium salt → amine" type="Nucleophilic substitution" color={c}
+        reagents="Excess halogenoalkane" conditions="Heat, ethanol solvent"
+        diagram={<Amine_NuSub/>}
+        steps={[
+          "N lone pair attacks the δ+ carbon of the halogenoalkane (SN2 mechanism).",
+          "A secondary ammonium salt forms first (R₂NH₂⁺X⁻).",
+          "Further NH₃ (or more amine) deprotonates the salt → secondary amine R₂NH.",
+          "Problem: the secondary amine can react again (it also has a lone pair!) → tertiary amine, then quaternary ammonium salt.",
+          "You get a MIXTURE of products — this is the main disadvantage. Use excess NH₃ to get mostly primary amine."
+        ]}
+        note="To make a specific amine cleanly, use the Gabriel synthesis or reduce a nitrile/amide instead."
+        extra={
+          <div style={{marginTop:12,background:"rgba(255,255,255,0.03)",borderRadius:6,padding:"10px 14px",fontSize:"0.8em",color:"#cbd5e1"}}>
+            <b style={{color:c}}>Ways to make amines (AQA):</b>
+            <div style={{marginTop:6,display:"flex",flexDirection:"column",gap:5}}>
+              {[
+                ["Nitrile + LiAlH₄","→ primary amine (RCH₂NH₂)","2 step from halogenoalkane"],
+                ["Nitrobenzene + Sn/conc HCl then NaOH","→ aniline (aryl amine)","reduction of arene"],
+                ["Halogenoalkane + excess NH₃","→ mixture of amines","alkylation (messy)"],
+                ["Amide + LiAlH₄","→ amine","reduction of amide"],
+              ].map(([a,b,c])=>(
+                <div key={a} style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                  <span style={{fontFamily:"monospace",color:"#e2e8f0"}}>{a}</span>
+                  <span style={{color:"#4ade80"}}>{b}</span>
+                  <span style={{color:"#64748b"}}>({c})</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        }
+      />
+    </>
+  ),
+};
+
+// ─── App ───────────────────────────────────────────────────────────────────
+function App() {
+  const [active, setActive] = useState("frs");
+  const topic = topics.find(t => t.id === active);
+
+  return (
+    <div style={{minHeight:"100vh",background:"#0b0f18",color:"#e2e8f0",fontFamily:"'Georgia','Times New Roman',serif"}}>
+      {/* Header */}
+      <div style={{background:"linear-gradient(135deg,#0f172a 0%,#1a0c2e 100%)",borderBottom:"1px solid rgba(255,255,255,0.08)",padding:"22px 24px 18px"}}>
+        <div style={{fontSize:"0.72em",color:"#64748b",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:5}}>AQA A-Level Chemistry</div>
+        <h1 style={{margin:0,fontSize:"1.65em",fontWeight:700,color:"#f8fafc",letterSpacing:"-0.01em"}}>Organic Mechanisms — Complete Guide</h1>
+        <div style={{color:"#94a3b8",fontSize:"0.83em",marginTop:5}}>Curly arrows · Lone pairs · Intermediates · Reagents & Conditions</div>
+      </div>
+
+      {/* Tabs */}
+      <div style={{display:"flex",overflowX:"auto",borderBottom:"1px solid rgba(255,255,255,0.08)",background:"#0d1117",padding:"0 10px",scrollbarWidth:"none",gap:2}}>
+        {topics.map(t=>(
+          <button key={t.id} onClick={()=>setActive(t.id)} style={{
+            background: active===t.id ? t.dark : "transparent",
+            border:"none",
+            borderBottom: active===t.id ? `2px solid ${t.color}` : "2px solid transparent",
+            color: active===t.id ? t.color : "#64748b",
+            padding:"11px 13px",
+            cursor:"pointer",
+            fontFamily:"inherit",
+            fontSize:"0.8em",
+            fontWeight: active===t.id ? 700 : 500,
+            whiteSpace:"nowrap",
+            transition:"all 0.15s",
+          }}>
+            {t.emoji} {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Content */}
+      <div style={{maxWidth:880,margin:"0 auto",padding:"26px 18px 70px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:22}}>
+          <div style={{width:4,height:30,background:topic.color,borderRadius:2}}/>
+          <h2 style={{margin:0,fontSize:"1.35em",fontWeight:700,color:"#f8fafc"}}>{topic.emoji} {topic.label}</h2>
+        </div>
+        {content[active]?.(topic.color)}
+      </div>
+
+      {/* Legend */}
+      <div style={{borderTop:"1px solid rgba(255,255,255,0.07)",padding:"14px 22px",background:"#0d1117",display:"flex",gap:18,flexWrap:"wrap",fontSize:"0.78em"}}>
+        <span style={{color:"#94a3b8"}}><span style={{color:"#fb923c",fontWeight:700}}>▶ Orange curly arrow</span> = heterolytic electron movement (pair)</span>
+        <span style={{color:"#94a3b8"}}><span style={{color:"#facc15",fontWeight:700}}>▷ Yellow fishhook</span> = homolytic (single electron, radical)</span>
+        <span style={{color:"#94a3b8"}}><span style={{color:"#60a5fa",fontWeight:700}}>●● Blue dots</span> = lone pair</span>
+        <span style={{color:"#94a3b8"}}><span style={{color:"#fde68a",fontWeight:700}}>δ+/δ−</span> = partial charges (polarisation)</span>
+        <span style={{color:"#94a3b8"}}><span style={{color:"#c084fc",fontWeight:700}}>Purple</span> = halogens</span>
+        <span style={{color:"#94a3b8"}}><span style={{color:"#f87171",fontWeight:700}}>Red</span> = oxygen</span>
+        <span style={{color:"#94a3b8"}}><span style={{color:"#60a5fa",fontWeight:700}}>Blue</span> = nitrogen</span>
+      </div>
+    </div>
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+  </script>
+</body>
+</html>
